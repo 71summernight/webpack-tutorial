@@ -1,18 +1,16 @@
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"],
-  "plugins": [
+  "presets": [
     [
-      "@babel/plugin-transform-runtime",
+      "@babel/preset-env",
       {
-        "corejs": 3
+        "modules": false,
+        "bugfixes": true,
+        "useBuiltIns": "usage",
+        "corejs": "3"
       }
-    ]
+    ],
+    ["@babel/preset-react", { "runtime": "automatic" }],
+    "@babel/preset-typescript"
   ],
-  "targets": {
-    "chrome": "64",
-    "edge": "79",
-    "firefox": "67",
-    "opera": "51",
-    "safari": "12"
-  }
+  "plugins": []
 }

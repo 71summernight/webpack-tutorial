@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "noEmit": true, // 컴파일된 파일을 생성하지 않음
+    "target": "es5", // 변환할 JavaScript 버전
+    "module": "commonjs", // 모듈 시스템 (e.g. commonjs, esnext)
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], // ★ Iterable 지원
+    "outDir": "./dist", // 컴파일된 파일 출력 폴더
+    "strict": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*"],
+  "exclude": []
+}

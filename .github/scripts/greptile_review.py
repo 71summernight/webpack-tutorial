@@ -46,9 +46,9 @@ def analyze_with_greptile(repository_url, changed_files):
 
     # Greptile 쿼리
     queries = [
-        f"Analyze architecture impact of changes to {', '.join(file_paths[:5])}",
-        f"Check for dependency issues in modified files",
-        f"Identify coupling between {file_paths[0]} and other modules",
+        f"다음 파일들의 변경이 아키텍처에 미치는 영향을 분석해주세요: {', '.join(file_paths[:5])}",
+        f"수정된 파일들의 의존성 이슈를 확인해주세요",
+        f"{file_paths[0]}과 다른 모듈 간의 결합도를 파악해주세요",
     ]
 
     analysis_results = []

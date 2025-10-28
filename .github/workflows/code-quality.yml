@@ -42,32 +42,32 @@ jobs:
           pip install requests PyGithub
           python .github/scripts/sonarcloud_korean_report.py
 
-  # greptile-review:
-  #   name: Greptile Code Structure Analysis
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'pull_request'
-  #
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.11'
-  #
-  #     - name: Install dependencies
-  #       run: |
-  #         pip install requests PyGithub
-  #
-  #     - name: Run Greptile Review
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         GREPTILE_API_KEY: ${{ secrets.GREPTILE_API_KEY }}
-  #         GITHUB_REPOSITORY: ${{ github.repository }}
-  #         PR_NUMBER: ${{ github.event.pull_request.number }}
-  #       run: |
-  #         python .github/scripts/greptile_review.py
+  greptile-review:
+    name: Greptile Code Structure Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests PyGithub
+
+      - name: Run Greptile Review
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GREPTILE_API_KEY: ${{ secrets.GREPTILE_API_KEY }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python .github/scripts/greptile_review.py
 
   claude-review:
     name: Claude AI Review

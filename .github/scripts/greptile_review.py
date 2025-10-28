@@ -44,17 +44,19 @@ def analyze_with_greptile(repository_url, changed_files):
     # 변경된 파일 목록
     file_paths = [f["filename"] for f in changed_files]
 
-    # Greptile 쿼리
+    # Greptile 쿼리 (한글 지원)
     queries = [
-        f"다음 파일들의 변경이 아키텍처에 미치는 영향을 분석해주세요: {', '.join(file_paths[:5])}",
-        f"수정된 파일들의 의존성 이슈를 확인해주세요",
-        f"{file_paths[0]}과 다른 모듈 간의 결합도를 파악해주세요",
+        f"분석 대상 파일: {', '.join(file_paths[:5])}. 이 파일들의 변경이 전체 아키텍처에 어떤 영향을 미치는지 분석해주세요.",
+        "TypeScript 및 React 코드의 타입 안정성과 성능 최적화 측면에서 개선 사항을 제안해주세요.",
+        "모듈 간의 의존성 구조를 분석하고 결합도 문제가 있는지 확인해주세요.",
     ]
 
     analysis_results = []
 
-    for query in queries:
+    for i, query in enumerate(queries):
         try:
+            print(f"📍 Greptile 쿼리 {i+1}/{len(queries)} 실행 중...")
+
             response = requests.post(
                 f"{GREPTILE_API_URL}/query",
                 headers=headers,
@@ -67,18 +69,32 @@ def analyze_with_greptile(repository_url, changed_files):
                     ],
                     "query": query
                 },
-                timeout=30
+                timeout=45
             )
+
+            print(f"   응답 상태: {response.status_code}")
 
             if response.status_code == 200:
                 result = response.json()
                 analysis_results.append({
-                    "query": query,
-                    "response": result.get("response", ""),
+                    "query": query[:80],  # 쿼리 요약
+                    "response": result.get("response", "응답 없음"),
                     "sources": result.get("sources", [])
                 })
+                print(f"   ✅ 성공")
+            elif response.status_code == 401:
+                print(f"   ❌ 인증 실패 (토큰 확인 필요)")
+                print(f"   응답: {response.text[:200]}")
+            else:
+                print(f"   ⚠️  API 오류: {response.status_code}")
+                print(f"   응답: {response.text[:200]}")
+
+        except requests.exceptions.Timeout:
+            print(f"   ❌ 타임아웃 (30초 초과)")
+        except requests.exceptions.RequestException as e:
+            print(f"   ❌ 요청 실패: {e}")
         except Exception as e:
-            print(f"⚠️  Greptile 쿼리 실패: {e}")
+            print(f"   ❌ 예상치 못한 오류: {type(e).__name__}: {e}")
 
     return analysis_results
 

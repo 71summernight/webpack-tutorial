@@ -63,7 +63,9 @@ def analyze_with_greptile(repository_url, changed_files):
                 json={
                     "repositories": [
                         {
-                            "remote": repository_url,
+                            "remote": "github",  # github, gitlab, azure, bitbucket, perforce
+                            "owner": "71summernight",
+                            "name": "webpack-tutorial",
                             "branch": "develop"
                         }
                     ],
@@ -137,8 +139,13 @@ def post_review(pr, review_text):
 </details>
 """
 
-    pr.create_issue_comment(comment)
-    print("✅ Greptile review posted successfully!")
+    try:
+        pr.create_issue_comment(comment)
+        print("✅ Greptile review posted successfully!")
+    except Exception as e:
+        print(f"⚠️  리뷰 코멘트 작성 실패: {type(e).__name__}")
+        print(f"   이유: {str(e)[:200]}")
+        print("   (분석 자체는 완료되었습니다)")
 
 def main():
     if not all([GITHUB_TOKEN, GREPTILE_API_KEY, REPOSITORY, PR_NUMBER]):

@@ -1,0 +1,72 @@
+# CodeRabbit AI 설정
+language: korean
+
+# 리뷰 스타일
+review:
+  # 기본 리뷰 활성화
+  enabled: true
+
+  # 리뷰 범위
+  maxFiles: 10
+  maxCodeLinesDiff: 500
+
+  # 리뷰 깊이 (light, medium, heavy)
+  depth: medium
+
+  # 체크할 항목들
+  checks:
+    security: true
+    performance: true
+    bestPractices: true
+    codeStyle: true
+
+# 언어별 설정
+languages:
+  typescript:
+    # TypeScript 특화 체크
+    enabled: true
+    checks:
+      typeChecking: true
+      nullSafety: true
+      unusedVariables: true
+
+  javascript:
+    enabled: true
+    checks:
+      asyncAwait: true
+      errorHandling: true
+      deprecatedAPIs: true
+
+  css:
+    enabled: true
+    checks:
+      performance: true
+      accessibility: true
+
+# 제외할 파일/폴더
+rules:
+  exclude:
+    - "node_modules/**"
+    - "dist/**"
+    - "build/**"
+    - "coverage/**"
+    - "**/*.min.js"
+    - "**/*.min.css"
+
+# 한글 응답 설정
+responseConfig:
+  language: korean
+  tone: professional
+  format: markdown
+
+# 리뷰 초점
+focus:
+  - 보안 취약점
+  - 성능 최적화
+  - 타입 안정성
+  - 코드 가독성
+  - Best Practice 준수
+
+# 무시할 경고 수준
+ignorePatterns:
+  - comments: "coderabbit:ignore"

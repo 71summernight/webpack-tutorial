@@ -12,7 +12,7 @@ GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 SONAR_TOKEN = os.getenv('SONAR_TOKEN')
 REPOSITORY = os.getenv('GITHUB_REPOSITORY')
 PR_NUMBER = int(os.getenv('PR_NUMBER', 0))
-SONAR_PROJECT_KEY = "71summernight-dev_webpack-tutorial"
+SONAR_PROJECT_KEY = "webpack-tutorial"  # sonar-project.properties와 일치
 SONAR_HOST_URL = "https://sonarcloud.io"
 
 # 한글 매핑
@@ -121,8 +121,13 @@ def post_korean_report(pr, report_text):
 💡 상세 분석은 SonarCloud 대시보드를 참고하세요.
 """
 
-    pr.create_issue_comment(comment)
-    print("✅ 한글 리포트 포스팅 완료!")
+    try:
+        pr.create_issue_comment(comment)
+        print("✅ 한글 리포트 포스팅 완료!")
+    except Exception as e:
+        print(f"⚠️  리포트 포스팅 실패: {type(e).__name__}")
+        print(f"   이유: {str(e)[:200]}")
+        print("   (SonarCloud 분석은 완료되었습니다)")
 
 def main():
     if not all([GITHUB_TOKEN, SONAR_TOKEN, REPOSITORY, PR_NUMBER]):

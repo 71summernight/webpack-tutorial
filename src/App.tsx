@@ -1,3 +1,4 @@
+import React from 'react';
 import './styles.css';
 
 interface Welcome {
@@ -5,10 +6,10 @@ interface Welcome {
   subtitle: string;
 }
 
-function App() {
+const App: React.FC = () => {
   const welcomeData: Welcome = {
     title: 'Hello, Webpack with React and TypeScript!',
-    subtitle: 'Code Review Automation Test',
+    subtitle: 'SonarCloud + Claude AI 코드리뷰 데모',
   };
 
   return (
@@ -17,6 +18,6 @@ function App() {
       <p>{welcomeData.subtitle}</p>
     </div>
   );
-}
+};
 
 export default App;

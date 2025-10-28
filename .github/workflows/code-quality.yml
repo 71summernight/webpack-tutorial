@@ -8,6 +8,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# GitHub Actions 권한 설정
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: write
+
 jobs:
   sonarcloud:
     name: SonarCloud Analysis

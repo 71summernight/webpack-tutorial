@@ -108,8 +108,13 @@ def post_review(pr, review_text):
 *피드백이 도움이 되었다면 👍를 눌러주세요!*
 """
 
-    pr.create_issue_comment(comment)
-    print("✅ Review posted successfully!")
+    try:
+        pr.create_issue_comment(comment)
+        print("✅ Review posted successfully!")
+    except Exception as e:
+        print(f"⚠️  리뷰 코멘트 작성 실패: {type(e).__name__}")
+        print(f"   이유: {str(e)[:200]}")
+        print("   (분석 자체는 완료되었습니다)")
 
 def main():
     if not all([GITHUB_TOKEN, CLAUDE_API_KEY, REPOSITORY, PR_NUMBER]):

@@ -20,3 +20,4 @@ function App() {
 }
 
 export default App;
+// Three reviews: SonarCloud, Greptile, Claude

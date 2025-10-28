@@ -20,3 +20,5 @@ function App() {
 }
 
 export default App;
+
+// CodeRabbit 한글 리뷰 테스트

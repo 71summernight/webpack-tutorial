@@ -1,72 +1,57 @@
 # CodeRabbit AI 설정
-language: korean
+# 공식 설정 형식: https://docs.coderabbit.ai/configuration
 
-# 리뷰 스타일
+# 한글 응답 강제 설정
+language: ko-KR
+
+# 리뷰 에이전트 설정
 review:
-  # 기본 리뷰 활성화
   enabled: true
-
-  # 리뷰 범위
   maxFiles: 10
   maxCodeLinesDiff: 500
 
-  # 리뷰 깊이 (light, medium, heavy)
-  depth: medium
+  # 리뷰 지시사항 (한글 강제)
+  instructions: |
+    당신은 경험 많은 소프트웨어 엔지니어입니다.
+    다음 코드 변경사항을 철저히 검토하고, 모든 피드백은 한국어로만 제공해주세요.
 
-  # 체크할 항목들
-  checks:
-    security: true
-    performance: true
-    bestPractices: true
-    codeStyle: true
+    검토 항목:
+    1. 🔒 보안: 취약점, 주입 공격, 인증/인가 문제
+    2. 🐛 버그: Null 참조, 로직 오류, 엣지 케이스
+    3. ⚡ 성능: 비효율적 알고리즘, 메모리 누수, 불필요한 렌더링
+    4. 📖 가독성: 변수명, 함수명, 코드 구조, 주석
+    5. ✨ Best Practice: 디자인 패턴, SOLID 원칙, 현대적 기법
 
-# 언어별 설정
-languages:
-  typescript:
-    # TypeScript 특화 체크
-    enabled: true
-    checks:
-      typeChecking: true
-      nullSafety: true
-      unusedVariables: true
+    각 문제마다:
+    - 심각도: Critical(🔴) / High(🟠) / Medium(🟡) / Low(🟢)
+    - 파일과 라인 번호
+    - 구체적인 문제 설명
+    - 개선 제안 (코드 예시 포함)
 
-  javascript:
-    enabled: true
-    checks:
-      asyncAwait: true
-      errorHandling: true
-      deprecatedAPIs: true
+    마지막에 전체 평가 요약을 한국어로 작성해주세요.
 
-  css:
-    enabled: true
-    checks:
-      performance: true
-      accessibility: true
+# 체크할 항목들
+checks:
+  security: true
+  performance: true
+  bestPractices: true
+  codeStyle: true
 
-# 제외할 파일/폴더
+# 제외 규칙
 rules:
   exclude:
-    - "node_modules/**"
-    - "dist/**"
-    - "build/**"
-    - "coverage/**"
+    - node_modules/**
+    - dist/**
+    - build/**
+    - coverage/**
     - "**/*.min.js"
     - "**/*.min.css"
 
-# 한글 응답 설정
-responseConfig:
-  language: korean
-  tone: professional
-  format: markdown
+# 릴리스 노트 생성 (한글)
+releaseNotes:
+  enabled: false
 
-# 리뷰 초점
-focus:
-  - 보안 취약점
-  - 성능 최적화
-  - 타입 안정성
-  - 코드 가독성
-  - Best Practice 준수
-
-# 무시할 경고 수준
-ignorePatterns:
-  - comments: "coderabbit:ignore"
+# 요약 (한글)
+summary:
+  enabled: true
+  description: "CodeRabbit AI 코드 리뷰 - 모든 피드백은 한국어로 제공됩니다."

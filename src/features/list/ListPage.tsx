@@ -8,7 +8,7 @@ const items = [
   { id: '3', name: 'Item 3' },
 ];
 
-export function ListPage() {
+export default function ListPage() {
   const navigate = useNavigate();
 
   return (

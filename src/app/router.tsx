@@ -9,9 +9,9 @@ const PageLoader = () => <div>Loading page...</div>;
 const ErrorFallback = () => <div>Something went wrong. Please try again.</div>;
 
 // 라우트 컴포넌트들을 동적으로 import
-const listPageLoader = () => import('../features/list/ListPage').then((m) => ({ default: m.ListPage }));
-const detailPageLoader = () => import('../features/detail/DetailPage').then((m) => ({ default: m.DetailPage }));
-const searchPageLoader = () => import('../features/search/SearchPage').then((m) => ({ default: m.SearchPage }));
+const ListPage = lazy(() => import('../features/list/ListPage'));
+const DetailPage = lazy(() => import('../features/detail/DetailPage'));
+const SearchPage = lazy(() => import('../features/search/SearchPage'));
 
 /**
  * 라우트 설정 (Single Source of Truth)
@@ -22,21 +22,21 @@ export const appRoutes = [
     id: 'home' as const,
     path: '/',
     title: 'Home',
-    component: lazy(listPageLoader),
+    component: ListPage,
     link: () => '/',
   },
   {
     id: 'search' as const,
     path: '/search',
     title: 'Search',
-    component: lazy(searchPageLoader),
+    component: SearchPage,
     link: () => '/search',
   },
   {
     id: 'detail' as const,
     path: '/detail/:id',
     title: 'Detail',
-    component: lazy(detailPageLoader),
+    component: DetailPage,
     link: (id: string) => `/detail/${id}`,
   },
 ] as const;

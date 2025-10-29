@@ -27,6 +27,11 @@ export default {
     hot: true,
     historyApiFallback: true,
     compress: true,
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+    },
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -134,7 +139,8 @@ export default {
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new DotenvPlugin({
       systemvars: true,
-      safe: true, // .env.example 파일과 비교
+      safe: false, // 또는 .env.example 파일 추가
+      silent: true, // 환경변수 없어도 빌드 진행
     }),
   ].filter(Boolean), // false 값 제거
 };

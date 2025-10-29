@@ -30,7 +30,10 @@ export const routeConfig = {
     title: 'Detail',
     component: DetailPage,
     link: (id: string) => {
-      if (!id) throw new Error('Detail page requires an id parameter');
+      if (!id) {
+        console.error('Detail page requires an id parameter');
+        return '/'; // fallback 경로
+      }
       return `/detail/${id}`;
     },
   },

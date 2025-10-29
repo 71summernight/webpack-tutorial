@@ -9,6 +9,7 @@ export const PAGES = {
   home: '/',
   search: '/search',
   detail: (id: string) => `/detail/${id}`,
+  settings: '/settings',
 } as const;
 
 /**
@@ -17,6 +18,7 @@ export const PAGES = {
 const ListPage = lazy(() => import('../pages/list/ListPage').then((m) => ({ default: m.ListPage })));
 const DetailPage = lazy(() => import('../pages/detail/DetailPage').then((m) => ({ default: m.DetailPage })));
 const SearchPage = lazy(() => import('../pages/search/SearchPage').then((m) => ({ default: m.SearchPage })));
+const SettingsPage = lazy(() => import('../pages/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })));
 
 /**
  * 라우트 설정 인터페이스
@@ -47,6 +49,11 @@ const routeConfigs: RouteConfig[] = [
     path: '/detail/:id',
     component: DetailPage,
     title: 'Detail',
+  },
+  {
+    path: PAGES.settings,
+    component: SettingsPage,
+    title: 'Settings',
   },
 ];
 

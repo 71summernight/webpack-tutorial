@@ -132,6 +132,9 @@ export default {
         chunkFilename: 'css/[name].[contenthash:8].chunk.css',
       }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
-    new DotenvPlugin(),
-  ].filter(Boolean),
+    new DotenvPlugin({
+      systemvars: true,
+      safe: true, // .env.example 파일과 비교
+    }),
+  ].filter(Boolean), // false 값 제거
 };

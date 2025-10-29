@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "indexing": {
+    "paths": ["src/**/*", "tests/**/*", ".github/**/*"],
+    "excludePaths": ["node_modules/**/*", "dist/**/*", "build/**/*", "coverage/**/*", ".git/**/*"],
+    "language": "typescript"
+  },
+  "search": {
+    "maxResults": 10,
+    "contextLines": 5
+  },
+  "analysis": {
+    "enabled": true,
+    "features": ["dependencies", "structure", "patterns", "architecture"]
+  }
+}

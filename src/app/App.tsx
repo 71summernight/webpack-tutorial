@@ -1,26 +1,37 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Suspense } from 'react';
+import { Suspense, memo } from 'react';
 import { routes } from './router';
 import { queryClient } from './config/queryClient';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
-const LoadingFallback = () => (
+const LoadingFallback = memo(() => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
     <p>Loading...</p>
   </div>
-);
+));
+LoadingFallback.displayName = 'LoadingFallback';
+
+const ErrorFallback = memo(() => (
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <p>Something went wrong. Please try refreshing the page.</p>
+  </div>
+));
+ErrorFallback.displayName = 'ErrorFallback';
 
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            {routes.map((route) => (
-              <Route key={route.id} path={route.path} element={route.element} />
-            ))}
-          </Routes>
-        </Suspense>
+        <ErrorBoundary fallback={<ErrorFallback />}>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              {routes.map((route) => (
+                <Route key={route.id} path={route.path} element={route.element} />
+              ))}
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
       </BrowserRouter>
     </QueryClientProvider>
   );

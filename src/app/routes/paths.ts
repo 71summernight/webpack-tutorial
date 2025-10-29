@@ -1,4 +1,4 @@
-import { appRoutes } from '../../app/router';
+import { routeConfig } from './config';
 
 /**
  * 네비게이션 경로 생성 함수
@@ -11,10 +11,10 @@ import { appRoutes } from '../../app/router';
  */
 
 export const PAGES = {
-  home: () => '/',
-  search: () => '/search',
+  home: () => routeConfig.home.path,
+  search: () => routeConfig.search.path,
   detail: (id: string) => {
     if (!id) throw new Error('Detail page requires an id parameter');
-    return `/detail/${id}`;
+    return routeConfig.detail.path.replace(':id', id);
   },
 } as const;

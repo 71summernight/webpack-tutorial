@@ -1,67 +1,12 @@
-import { lazy, memo, Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
-import { ErrorBoundary } from '../components/ErrorBoundary';
-
-const PageLoader = memo(() => <div>Loading page...</div>);
-PageLoader.displayName = 'PageLoader';
-const ErrorFallback = memo(() => <div>Something went wrong...</div>);
-ErrorFallback.displayName = 'ErrorFallback';
-
-// 라우트 컴포넌트들을 동적으로 import
-const ListPage = lazy(() => import('../features/list/ListPage'));
-const DetailPage = lazy(() => import('../features/detail/DetailPage'));
-const SearchPage = lazy(() => import('../features/search/SearchPage'));
+import { appRoutes } from './routes/config';
 
 /**
- * 라우트 설정 (Single Source of Truth)
- * 이 배열을 수정하면 라우팅과 네비게이션이 자동 적용됩니다.
+ * React Router에 전달할 RouteObject 배열
+ * ErrorBoundary와 Suspense는 App 레벨에서 한 번만 적용
  */
-export const appRoutes = [
-  {
-    id: 'home' as const,
-    path: '/',
-    title: 'Home',
-    component: ListPage,
-    link: () => '/',
-  },
-  {
-    id: 'search' as const,
-    path: '/search',
-    title: 'Search',
-    component: SearchPage,
-    link: () => '/search',
-  },
-  {
-    id: 'detail' as const,
-    path: '/detail/:id',
-    title: 'Detail',
-    component: DetailPage,
-    link: (id: string) => `/detail/${id}`,
-  },
-] as const;
-
-// React Router에 전달할 RouteObject 배열 자동 생성
-// 모든 페이지에 default ErrorBoundary와 Suspense 적용
-export const routes: RouteObject[] = (() => {
-  return appRoutes.map((route) => {
-    const Component = route.component;
-    return {
-      path: route.path,
-      element: (
-        <ErrorBoundary fallback={<ErrorFallback />}>
-          <Suspense fallback={<PageLoader />}>
-            <Component />
-          </Suspense>
-        </ErrorBoundary>
-      ),
-      id: `route-${route.id}`,
-    };
-  });
-})();
-
-// 네비게이션 UI 등에 사용할 메타데이터 자동 생성
-export const routeMetadata = appRoutes.map(({ id, path, title }) => ({
-  id,
-  path,
-  title,
+export const routes: RouteObject[] = appRoutes.map((route) => ({
+  path: route.path,
+  element: <route.component />,
+  id: `route-${route.id}`,
 }));

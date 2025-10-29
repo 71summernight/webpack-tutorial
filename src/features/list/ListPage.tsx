@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { PAGES } from '../../shared/constants/pages';
+import { PAGES } from '../../app/routes/paths';
 
 // 더미 데이터
 const items = [

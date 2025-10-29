@@ -27,11 +27,11 @@
     ]
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.5",
     "axios": "^1.13.1",
     "core-js": "^3.46.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-query": "^3.39.3",
     "react-router-dom": "^7.9.4",
     "zustand": "^5.0.8"
   },
@@ -50,6 +50,7 @@
     "babel-loader": "^10.0.0",
     "cross-env": "^10.1.0",
     "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
     "dotenv-webpack": "^8.1.1",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
@@ -63,6 +64,7 @@
     "react-refresh": "^0.18.0",
     "source-map-loader": "^5.0.0",
     "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.1",

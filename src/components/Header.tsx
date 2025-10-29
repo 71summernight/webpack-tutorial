@@ -1,17 +1,16 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { appRoutes } from '../app/routes/config';
 
 export default function Header() {
   return (
-    <nav>
+    <nav className="flex justify-between items-center">
       <header>HYUNJIN-WATCHA</header>
       <ul>
-        {appRoutes.map((route) => (
-          <li key={route.id}>
-            <Link to={route.link(route.id)}>{route.title}</Link>
-          </li>
-        ))}
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/search">Search</Link>
+        </li>
       </ul>
     </nav>
   );

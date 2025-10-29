@@ -111,6 +111,7 @@ export default {
               sourceMap: isDevelopment,
             },
           },
+          'postcss-loader',
         ],
       },
     ],

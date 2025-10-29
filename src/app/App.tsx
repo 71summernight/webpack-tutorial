@@ -4,6 +4,7 @@ import { Suspense, memo } from 'react';
 import { routes } from './router';
 import { queryClient } from './config/queryClient';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import '../style/reset.css';
 import Header from '../components/Header';
 
 const LoadingFallback = memo(() => (

@@ -1,81 +1,54 @@
-import { lazy, ComponentType } from 'react';
+import { lazy, Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
 
-/**
- * 네비게이션 경로 정의
- * 타입 안전성을 위해 상수로 관리
- */
-export const PAGES = {
-  home: '/',
-  search: '/search',
-  detail: (id: string) => `/detail/${id}`,
-  settings: '/settings',
-} as const;
-
-/**
- * 페이지 컴포넌트 (Lazy Loading)
- */
-const ListPage = lazy(() => import('../pages/list/ListPage').then((m) => ({ default: m.ListPage })));
-const DetailPage = lazy(() => import('../pages/detail/DetailPage').then((m) => ({ default: m.DetailPage })));
-const SearchPage = lazy(() => import('../pages/search/SearchPage').then((m) => ({ default: m.SearchPage })));
-const SettingsPage = lazy(() => import('../pages/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })));
-
-/**
- * 라우트 설정 인터페이스
- */
-interface RouteConfig {
-  path: string;
-  component: ComponentType;
-  title?: string;
-  requiresAuth?: boolean;
-}
+// Suspense fallback으로 사용할 로딩 컴포넌트
+const PageLoader = () => <div>Loading page...</div>;
 
 /**
  * 라우트 설정 (Single Source of Truth)
- * 이 배열 하나만 수정하면 네비게이션, 라우팅 모두 자동 적용
+ * 이 배열을 수정하면 라우팅과 네비게이션이 자동 적용됩니다.
  */
-const routeConfigs: RouteConfig[] = [
+export const appRoutes = [
   {
-    path: PAGES.home,
-    component: ListPage,
+    id: 'home' as const,
+    path: '/',
     title: 'Home',
+    component: lazy(() => import('../pages/list/ListPage').then((m) => ({ default: m.ListPage }))),
+    link: () => '/',
   },
   {
-    path: PAGES.search,
-    component: SearchPage,
+    id: 'search' as const,
+    path: '/search',
     title: 'Search',
+    component: lazy(() => import('../pages/search/SearchPage').then((m) => ({ default: m.SearchPage }))),
+    link: () => '/search',
   },
   {
+    id: 'detail' as const,
     path: '/detail/:id',
-    component: DetailPage,
     title: 'Detail',
+    component: lazy(() => import('../pages/detail/DetailPage').then((m) => ({ default: m.DetailPage }))),
+    link: (id: string) => `/detail/${id}`,
   },
-  {
-    path: PAGES.settings,
-    component: SettingsPage,
-    title: 'Settings',
-  },
-];
+] as const;
 
-/**
- * RouteObject 배열 생성
- * React Router에 전달할 형식으로 변환
- */
-export const routes: RouteObject[] = routeConfigs.map((config, index) => {
-  const Component = config.component;
+// React Router에 전달할 RouteObject 배열 자동 생성
+export const routes: RouteObject[] = appRoutes.map((route) => {
+  const Component = route.component;
   return {
-    path: config.path,
-    element: <Component />,
-    id: `route-${config.path}-${index}`,
+    path: route.path,
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <Component />
+      </Suspense>
+    ),
+    id: `route-${route.id}`,
   };
 });
 
-/**
- * 라우트 메타데이터 (필요 시 네비게이션 UI 생성용)
- */
-export const routeMetadata = routeConfigs.map((config, index) => ({
-  path: config.path,
-  title: config.title,
-  id: `route-${config.path}-${index}`,
-  requiresAuth: config.requiresAuth ?? false,
+// 네비게이션 UI 등에 사용할 메타데이터 자동 생성
+export const routeMetadata = appRoutes.map((route) => ({
+  path: route.path,
+  title: route.title,
+  id: `route-${route.id}`,
 }));

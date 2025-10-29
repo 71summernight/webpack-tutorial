@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { PAGES } from '../../app/router';
+import { PAGES } from '../../constants/pages';
 
 // 더미 데이터
 const items = [
@@ -17,7 +17,7 @@ export function ListPage() {
       <ul>
         {items.map((item) => (
           <li key={item.id}>
-            <button onClick={() => navigate(PAGES.detail(item.id))}>{item.name}</button>
+            <button onClick={() => navigate(PAGES.detail(item.id as string))}>{item.name}</button>
           </li>
         ))}
       </ul>

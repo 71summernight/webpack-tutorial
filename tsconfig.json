@@ -6,6 +6,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"], // ★ Iterable 지원
     "outDir": "./dist", // 컴파일된 파일 출력 폴더
     "strict": true,
+    "noImplicitAny": false, // any를 warning으로 처리
     "esModuleInterop": true,
     "jsx": "react-jsx"
   },

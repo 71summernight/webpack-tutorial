@@ -8,30 +8,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-# GitHub Actions 권한 설정
 permissions:
   contents: read
   pull-requests: write
-  issues: write
-  checks: write
 
 jobs:
-  sonarcloud:
-    name: SonarCloud Analysis
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   greptile-review:
     name: Greptile Code Structure Analysis
     runs-on: ubuntu-latest

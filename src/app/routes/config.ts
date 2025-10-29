@@ -15,18 +15,24 @@ export const routeConfig = {
     path: '/',
     title: 'Home',
     component: ListPage,
+    link: () => '/',
   },
   search: {
     id: 'search' as const,
     path: '/search',
     title: 'Search',
     component: SearchPage,
+    link: () => '/search',
   },
   detail: {
     id: 'detail' as const,
     path: '/detail/:id',
     title: 'Detail',
     component: DetailPage,
+    link: (id: string) => {
+      if (!id) throw new Error('Detail page requires an id parameter');
+      return `/detail/${id}`;
+    },
   },
 } as const;
 

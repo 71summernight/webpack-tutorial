@@ -8,5 +8,5 @@ import { appRoutes } from './routes/config';
 export const routes: RouteObject[] = appRoutes.map((route) => ({
   path: route.path,
   element: <route.component />,
-  id: `route-${route.id}`,
+  id: route.id,
 }));

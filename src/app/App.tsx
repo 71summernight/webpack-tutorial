@@ -4,6 +4,7 @@ import { Suspense, memo } from 'react';
 import { routes } from './router';
 import { queryClient } from './config/queryClient';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import Header from '../components/Header';
 
 const LoadingFallback = memo(() => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -25,6 +26,7 @@ export function App() {
       <BrowserRouter>
         <ErrorBoundary fallback={<ErrorFallback />}>
           <Suspense fallback={<LoadingFallback />}>
+            <Header />
             <Routes>
               {routes.map((route) => (
                 <Route key={route.id} path={route.path} element={route.element} />

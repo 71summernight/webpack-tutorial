@@ -17,7 +17,7 @@ export function ListPage() {
       <ul>
         {items.map((item) => (
           <li key={item.id}>
-            <button onClick={() => navigate(PAGES.detail(item.id as string))}>{item.name}</button>
+            <button onClick={() => navigate(PAGES.detail(item.id))}>{item.name}</button>
           </li>
         ))}
       </ul>

@@ -43,13 +43,24 @@ export default [
     },
   },
 
-  // ✅ 커스텀 규칙
+  // ✅ TypeScript 파일 규칙
   {
-    files: ['src/**/*.{js,mjs,ts,jsx,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'no-unused-vars': 'off', // TypeScript 파일에서는 @typescript-eslint/no-unused-vars 사용
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'react/react-in-jsx-scope': 'off',
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    },
+  },
+
+  // ✅ JavaScript 파일 규칙
+  {
+    files: ['src/**/*.{js,mjs,jsx}'],
     rules: {
       'no-unused-vars': 'warn',
       'no-undef': 'error',
-      '@typescript-eslint/no-unused-vars': 'warn',
       'react/react-in-jsx-scope': 'off',
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },

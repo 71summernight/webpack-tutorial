@@ -40,7 +40,8 @@ export default {
       new TerserPlugin({
         terserOptions: {
           compress: {
-            drop_console: true,
+            drop_console: !isDevelopment,
+            pure_funcs: isDevelopment ? [] : ['console.log', 'console.debug'],
           },
           format: {
             comments: false,

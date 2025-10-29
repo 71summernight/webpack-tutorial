@@ -9,7 +9,4 @@ type PageLinks = {
   [K in (typeof appRoutes)[number]['id']]: Extract<(typeof appRoutes)[number], { id: K }>['link'];
 };
 
-export const PAGES: PageLinks = appRoutes.reduce((acc, route) => {
-  (acc as any)[route.id] = route.link;
-  return acc;
-}, {} as PageLinks);
+export const PAGES = Object.fromEntries(appRoutes.map((route) => [route.id, route.link])) as PageLinks;

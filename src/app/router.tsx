@@ -47,8 +47,8 @@ export const routes: RouteObject[] = appRoutes.map((route) => {
 });
 
 // 네비게이션 UI 등에 사용할 메타데이터 자동 생성
-export const routeMetadata = appRoutes.map((route) => ({
-  path: route.path,
-  title: route.title,
-  id: `route-${route.id}`,
+export const routeMetadata = appRoutes.map(({ id, path, title }) => ({
+  id,
+  path,
+  title,
 }));

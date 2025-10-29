@@ -6,12 +6,17 @@ import pluginReact from 'eslint-plugin-react';
 import prettier from 'eslint-plugin-prettier/recommended';
 
 export default [
+  // ✅ dist, node_modules 등 무시
+  {
+    ignores: ['dist/', 'node_modules/', 'webpack.*.js', 'webpack.*.cjs'],
+  },
+
   // ✅ prettier recommended 설정을 가장 먼저 추가 (포맷 우선순위 유지)
   prettier,
 
-  // ✅ 공통 적용 대상
+  // ✅ src 디렉토리만 체크
   {
-    files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
+    files: ['src/**/*.{js,mjs,ts,jsx,tsx}'],
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
@@ -29,15 +34,24 @@ export default [
   ...tseslint.configs.recommended,
 
   // ✅ React 플러그인 Flat config 적용
-  pluginReact.configs.flat.recommended,
+  {
+    ...pluginReact.configs.flat.recommended,
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
 
   // ✅ 커스텀 규칙
   {
+    files: ['src/**/*.{js,mjs,ts,jsx,tsx}'],
     rules: {
-      'no-unused-vars': 'error',
+      'no-unused-vars': 'warn',
       'no-undef': 'error',
-      'react/react-in-jsx-scope': 'off', // Next.js는 React import 불필요
-      'prettier/prettier': ['error', { endOfLine: 'auto' }], // prettier 연동 강화
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'react/react-in-jsx-scope': 'off',
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
   },
 ];

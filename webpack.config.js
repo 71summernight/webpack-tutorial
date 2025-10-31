@@ -1,11 +1,11 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import DotenvPlugin from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
-import DotenvPlugin from 'dotenv-webpack';
+import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
-import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -139,9 +139,10 @@ export default {
       }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new DotenvPlugin({
+      path: `.env.${process.env.NODE_ENV || 'development'}`,
       systemvars: true,
-      safe: false, // 또는 .env.example 파일 추가
-      silent: true, // 환경변수 없어도 빌드 진행
+      safe: false,
+      silent: true,
     }),
   ].filter(Boolean), // false 값 제거
 };

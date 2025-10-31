@@ -1,26 +1,23 @@
-import { useNavigate } from 'react-router-dom';
-import { PAGES } from '../../app/routes/paths';
+import { MovieSection } from './components/MovieSection';
+import { useMovieQueries, type MovieType } from './hooks/useMovieQueries';
 
-// 더미 데이터
-const items = [
-  { id: '1', name: 'Item 1' },
-  { id: '2', name: 'Item 2' },
-  { id: '3', name: 'Item 3' },
-];
+const MOVIE_TYPES: MovieType[] = ['popular', 'now_playing', 'top_rated', 'upcoming'];
 
 export default function ListPage() {
-  const navigate = useNavigate();
+  const results = useMovieQueries(MOVIE_TYPES);
 
   return (
     <div>
-      <h1>List</h1>
-      <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            <button onClick={() => navigate(PAGES.detail(item.id))}>{item.name}</button>
-          </li>
-        ))}
-      </ul>
+      {results.map((result, index) => (
+        <MovieSection
+          key={MOVIE_TYPES[index]}
+          type={MOVIE_TYPES[index]}
+          data={result.data}
+          isLoading={result.isLoading}
+          error={result.error as Error | null}
+          refetch={result.refetch}
+        />
+      ))}
     </div>
   );
 }

@@ -1,0 +1,29 @@
+import { useQueries } from '@tanstack/react-query';
+import { movieApi } from '../../../entities/movie/api';
+import { MovieListResponse } from '../../../entities/movie/types';
+
+type MovieType = 'popular' | 'now_playing' | 'top_rated' | 'upcoming';
+
+const getMovieQuery = (type: MovieType) => {
+  const apiMethods: Record<MovieType, () => Promise<MovieListResponse>> = {
+    popular: () => movieApi.getPopularMovies(),
+    now_playing: () => movieApi.getNowPlayingMovies(),
+    top_rated: () => movieApi.getTopRatedMovies(),
+    upcoming: () => movieApi.getUpcomingMovies(),
+  };
+
+  return {
+    queryKey: ['movies', type],
+    queryFn: apiMethods[type],
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  };
+};
+
+export function useMovieQueries(types: MovieType[]) {
+  return useQueries({
+    queries: types.map((type) => getMovieQuery(type)),
+  });
+}
+
+export type { MovieType };

@@ -27,7 +27,18 @@ module.exports = {
           options: {
             cacheDirectory: true,
             presets: [
-              ['@babel/preset-env', { modules: false, bugfixes: true, useBuiltIns: 'usage', corejs: '3' }],
+              [
+                '@babel/preset-env',
+                {
+                  modules: false,
+                  bugfixes: true,
+                  useBuiltIns: 'usage',
+                  corejs: '3',
+                  targets: {
+                    browsers: ['last 2 versions', '> 0.5%', 'not dead'],
+                  },
+                },
+              ],
               ['@babel/preset-react', { runtime: 'automatic' }],
               '@babel/preset-typescript',
             ],

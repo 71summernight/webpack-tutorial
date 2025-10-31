@@ -1,11 +1,11 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import DotenvPlugin from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
-import DotenvPlugin from 'dotenv-webpack';
+import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
-import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -27,6 +27,11 @@ export default {
     hot: true,
     historyApiFallback: true,
     compress: true,
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+    },
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -106,6 +111,7 @@ export default {
               sourceMap: isDevelopment,
             },
           },
+          'postcss-loader',
         ],
       },
     ],
@@ -133,8 +139,10 @@ export default {
       }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     new DotenvPlugin({
+      path: `.env.${process.env.NODE_ENV || 'development'}`,
       systemvars: true,
-      safe: true, // .env.example 파일과 비교
+      safe: false,
+      silent: true,
     }),
   ].filter(Boolean), // false 값 제거
 };

@@ -9,7 +9,7 @@ interface ErrorProps {
   onRetry?: () => void;
 }
 
-export default function Error({ error, onRetry }: ErrorProps) {
+export default function ErrorPage({ error, onRetry }: ErrorProps) {
   const navigate = useNavigate();
 
   return (

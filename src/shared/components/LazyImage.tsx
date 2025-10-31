@@ -71,6 +71,7 @@ export function LazyImage({
         loading="lazy"
         decoding="async"
         fetchPriority={fetchPriority}
+        role={onClick ? 'button' : undefined}
         onLoad={() => setIsLoaded(true)}
         onClick={onClick}
         style={{
@@ -79,6 +80,7 @@ export function LazyImage({
           width: '100%',
           height: '100%',
           objectFit: 'cover',
+          cursor: onClick ? 'pointer' : 'default',
           ...style,
         }}
       />

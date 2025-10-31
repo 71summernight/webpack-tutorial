@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=development webpack serve --open",
     "dev": "cross-env NODE_ENV=development webpack serve --open",
+    "start": "npm run dev",
     "build": "cross-env NODE_ENV=production webpack && npm run type-check",
     "type-check": "tsc --noEmit --skipLibCheck",
     "prepare": "husky install"

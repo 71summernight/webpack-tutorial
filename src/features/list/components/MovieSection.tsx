@@ -1,6 +1,7 @@
 import { MovieListResponse } from '../../../entities/movie/types';
 import Error from '../../../shared/ui/Error';
 import Loading from '../../../shared/ui/Loading';
+import { MOVIE_TYPE_LABELS } from '../constants/movieTypeLabels';
 
 import { MovieList } from './MovieList';
 
@@ -14,11 +15,15 @@ interface MovieSectionProps {
 
 export function MovieSection({ type, data, isLoading, error, refetch }: MovieSectionProps) {
   return (
-    <section>
-      <h1 className="text-2xl font-bold text-white my-4 bg-primary p-4 rounded-lg">{type}</h1>
-      {isLoading && <Loading />}
-      {error && <Error error={error} onRetry={refetch} />}
-      {!isLoading && !error && <MovieList movies={data?.results} />}
-    </section>
+    <>
+      <h2 className="font-bold text-white my-4 bg-primary px-4 py-2  my-5 rounded-lg w-fit ">
+        {MOVIE_TYPE_LABELS[type]}
+      </h2>
+      <section>
+        {isLoading && <Loading />}
+        {error && <Error error={error} onRetry={refetch} />}
+        {!isLoading && !error && <MovieList movies={data?.results} type={type} />}
+      </section>
+    </>
   );
 }

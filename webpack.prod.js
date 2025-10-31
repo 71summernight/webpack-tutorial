@@ -25,7 +25,4 @@ module.exports = merge(common, {
     splitChunks: { chunks: 'all' },
     runtimeChunk: 'single', // 런타임 분리 → 캐시 효율 상승
   },
-  performance: {
-    hints: false, // 경고가 거슬리면 끄기(선택)
-  },
 });

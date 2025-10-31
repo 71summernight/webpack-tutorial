@@ -2,20 +2,24 @@ import { Link } from 'react-router-dom';
 import { LazyImage } from '../../../shared/components/LazyImage';
 import { MOVIE_CONSTANTS } from '../constants';
 import { Movie } from '../types';
+import { PopularBadge } from './PopularBadge';
 
 interface MovieCardProps {
   movie: Movie;
   isLCP?: boolean;
+  isPopular?: boolean;
+  index: number;
 }
 
-export function MovieCard({ movie, isLCP = false }: MovieCardProps) {
+export function MovieCard({ movie, isLCP = false, isPopular = false, index }: MovieCardProps) {
   const posterSrc = movie.poster_path
     ? `${MOVIE_CONSTANTS.TMDB_IMAGE_BASE_URL}/${movie.poster_path}`
     : MOVIE_CONSTANTS.DEFAULT_POSTER_IMAGE;
 
   return (
-    <li>
-      <Link to={`/detail/${movie.id}`}>
+    <li className="relative">
+      <Link to={`/detail/${movie.id}`} className="relative block">
+        {isPopular && <PopularBadge index={index} />}
         <LazyImage
           src={posterSrc}
           alt={movie.title}

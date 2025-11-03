@@ -4,6 +4,7 @@ import { useMovieQuery } from '../hooks/useMovieQueries';
 
 export function PopularMovieSectionContent({ type }: { type: MovieType }) {
   const { data } = useMovieQuery(type);
+  if (!data?.results) return null;
 
   return (
     <ul

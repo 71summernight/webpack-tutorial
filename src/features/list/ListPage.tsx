@@ -1,10 +1,13 @@
+import { lazy } from 'react';
 import { HEADER_HEIGHT } from '../../styles/constants';
 import { MovieTypeFilter } from './components/MovieTypeFilter';
-import NowPlayingMovieSection from './components/NowPlayingMovieSection';
-import PopularMovieSection from './components/PopularMovieSection';
-import TopRatedMovieSection from './components/TopRatedMovieSection';
-import UpcomingMovieSection from './components/UpcomingMovieSection';
+
 import { useMovieTypeSelection } from './hooks/useMovieTypeSelection';
+
+const NowPlayingMovieSection = lazy(() => import('./components/NowPlayingMovieSection'));
+const TopRatedMovieSection = lazy(() => import('./components/TopRatedMovieSection'));
+const UpcomingMovieSection = lazy(() => import('./components/UpcomingMovieSection'));
+const PopularMovieSection = lazy(() => import('./components/PopularMovieSection'));
 
 export default function ListPage() {
   const { selectedType, handleTypeClick, MOVIE_TYPES, setSectionRef } = useMovieTypeSelection();

@@ -1,8 +1,7 @@
-import { MOVIE_TYPE_LABELS } from '../constants/movieTypeLabels';
-import type { MovieType } from '../hooks/useMovieQueries';
+import { MOVIE_TYPE_LABELS, MovieType } from '../constants/movieTypes';
 
 interface MovieTypeFilterProps {
-  types: MovieType[];
+  types: readonly MovieType[];
   selectedType: MovieType;
   onTypeClick: (type: MovieType) => void;
 }

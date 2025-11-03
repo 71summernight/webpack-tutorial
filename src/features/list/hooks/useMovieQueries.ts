@@ -1,8 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { movieApi } from '../../../entities/movie/api';
 import { MovieListResponse } from '../../../entities/movie/types';
-
-type MovieType = 'popular' | 'now_playing' | 'top_rated' | 'upcoming';
+import { MovieType } from '../constants/movieTypes';
 
 const getMovieQuery = (type: MovieType) => {
   const apiMethods: Record<MovieType, () => Promise<MovieListResponse>> = {
@@ -23,5 +22,3 @@ const getMovieQuery = (type: MovieType) => {
 export function useMovieQuery(type: MovieType) {
   return useSuspenseQuery(getMovieQuery(type));
 }
-
-export type { MovieType };

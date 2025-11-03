@@ -1,30 +1,13 @@
-import { useEffect, useState } from 'react';
 import { HEADER_HEIGHT } from '../../styles/constants';
 import { MovieTypeFilter } from './components/MovieTypeFilter';
 import NowPlayingMovieSection from './components/NowPlayingMovieSection';
 import PopularMovieSection from './components/PopularMovieSection';
 import TopRatedMovieSection from './components/TopRatedMovieSection';
 import UpcomingMovieSection from './components/UpcomingMovieSection';
-import { type MovieType } from './hooks/useMovieQueries';
-import { useScrollToSection } from './hooks/useScrollToSection';
-
-const MOVIE_TYPES: MovieType[] = ['popular', 'now_playing', 'top_rated', 'upcoming'];
+import { useMovieTypeSelection } from './hooks/useMovieTypeSelection';
 
 export default function ListPage() {
-  const [selectedType, setSelectedType] = useState<MovieType>(MOVIE_TYPES[0]);
-  const { scrollToSection } = useScrollToSection();
-
-  const handleTypeClick = (type: MovieType) => {
-    setSelectedType(type);
-  };
-
-  useEffect(() => {
-    if (selectedType === MOVIE_TYPES[0]) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      scrollToSection(selectedType);
-    }
-  }, [selectedType, scrollToSection]);
+  const { selectedType, handleTypeClick, MOVIE_TYPES } = useMovieTypeSelection();
 
   return (
     <div className="px-10">

@@ -1,5 +1,6 @@
 import { MovieCard } from '../../../entities/movie/ui/MovieCard';
-import { MovieType, useMovieQuery } from '../hooks/useMovieQueries';
+import { MovieType } from '../constants/movieTypes';
+import { useMovieQuery } from '../hooks/useMovieQueries';
 
 export function TopRatedMovieSectionContent({ type }: { type: MovieType }) {
   const { data } = useMovieQuery(type);

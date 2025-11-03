@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 import { ErrorBoundary } from '../../../shared/components/ErrorBoundary';
 import Loading from '../../../shared/ui/Loading';
-import { MOVIE_TYPE_LABELS } from '../constants/movieTypeLabels';
-import { MovieType } from '../hooks/useMovieQueries';
+import { MOVIE_TYPE_LABELS, MovieType } from '../constants/movieTypes';
 import { TopRatedMovieSectionContent } from './TopRatedMovieSectionContent';
 
 export default function TopRatedMovieSection({ type }: { type: MovieType }) {

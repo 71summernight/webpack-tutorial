@@ -1,4 +1,6 @@
-import type { MovieType } from '../hooks/useMovieQueries';
+export const MOVIE_TYPES = ['popular', 'now_playing', 'top_rated', 'upcoming'] as const;
+
+export type MovieType = (typeof MOVIE_TYPES)[number];
 
 export const MOVIE_TYPE_LABELS: Record<MovieType, string> = {
   popular: '인기',

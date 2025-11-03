@@ -1,4 +1,4 @@
-import { useQueries } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { movieApi } from '../../../entities/movie/api';
 import { MovieListResponse } from '../../../entities/movie/types';
 
@@ -20,10 +20,8 @@ const getMovieQuery = (type: MovieType) => {
   };
 };
 
-export function useMovieQueries(types: MovieType[]) {
-  return useQueries({
-    queries: types.map((type) => getMovieQuery(type)),
-  });
+export function useMovieQuery(type: MovieType) {
+  return useSuspenseQuery(getMovieQuery(type));
 }
 
 export type { MovieType };

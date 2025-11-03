@@ -59,7 +59,7 @@ export function LazyImage({
     >
       <img
         ref={imgRef}
-        src={imageSrc}
+        src={imageSrc || undefined}
         alt={alt}
         width={width}
         height={height}

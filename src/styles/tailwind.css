@@ -20,6 +20,7 @@ body {
     'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-padding-top: 172px; /* Header(96x) + Filter(56px) + Offset(20px) */
 }
 
 #root {

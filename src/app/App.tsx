@@ -1,20 +1,13 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Suspense, memo } from 'react';
+import { memo } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { routes } from './router';
-import { queryClient } from './config/queryClient';
 import { ErrorBoundary } from '../shared/components/ErrorBoundary';
-import Header from '../widgets/Header';
-import '../styles/tailwind.css';
 import '../styles/reset.css';
-
-const LoadingFallback = memo(() => (
-  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-    <p>Loading...</p>
-  </div>
-));
-LoadingFallback.displayName = 'LoadingFallback';
+import '../styles/tailwind.css';
+import Header from '../widgets/Header';
+import { queryClient } from './config/queryClient';
+import { routes } from './router';
 
 const ErrorFallback = memo(() => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -28,14 +21,12 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <ErrorBoundary fallback={<ErrorFallback />}>
-          <Suspense fallback={<LoadingFallback />}>
-            <Header />
-            <Routes>
-              {routes.map((route) => (
-                <Route key={route.id} path={route.path} element={route.element} />
-              ))}
-            </Routes>
-          </Suspense>
+          <Header />
+          <Routes>
+            {routes.map((route) => (
+              <Route key={route.id} path={route.path} element={route.element} />
+            ))}
+          </Routes>
         </ErrorBoundary>
       </BrowserRouter>
     </QueryClientProvider>

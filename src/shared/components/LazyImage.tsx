@@ -32,9 +32,7 @@ export function LazyImage({
       ([entry]) => {
         if (entry.isIntersecting) {
           setImageSrc(src);
-          if (imgRef.current) {
-            observer.unobserve(imgRef.current);
-          }
+          observer.disconnect(); // 이미지 로드 후 observer 완전 해제
         }
       },
       {
@@ -47,9 +45,7 @@ export function LazyImage({
     }
 
     return () => {
-      if (imgRef.current) {
-        observer.unobserve(imgRef.current);
-      }
+      observer.disconnect(); // cleanup에서 안전하게 해제
     };
   }, [src]);
 
@@ -63,7 +59,7 @@ export function LazyImage({
     >
       <img
         ref={imgRef}
-        src={imageSrc}
+        src={imageSrc || undefined}
         alt={alt}
         width={width}
         height={height}

@@ -7,8 +7,8 @@ export const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
       gcTime: 10 * 60 * 1000,
-      // 에러 처리 추가
-      throwOnError: false,
+      // Suspense와 ErrorBoundary로 에러 처리
+      throwOnError: true,
       // 네트워크 에러에 대한 재시도 로직
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     },

@@ -4,9 +4,14 @@ import Loading from '../../../shared/ui/Loading';
 import { MOVIE_TYPE_LABELS, MovieType } from '../constants/movieTypes';
 import { PopularMovieSectionContent } from './PopularMovieSectionContent';
 
-export default function PopularMovieSection({ type }: { type: MovieType }) {
+interface PopularMovieSectionProps {
+  type: MovieType;
+  setSectionRef: (type: MovieType, element: HTMLElement | null) => void;
+}
+
+export default function PopularMovieSection({ type, setSectionRef }: PopularMovieSectionProps) {
   return (
-    <section id={`movie-section-${type}`}>
+    <section ref={(el) => setSectionRef(type, el)}>
       <h2 className="font-bold text-white my-4 bg-primary px-4 py-2 my-5 rounded-lg w-fit">
         {MOVIE_TYPE_LABELS[type]}
       </h2>

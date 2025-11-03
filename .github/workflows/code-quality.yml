@@ -16,7 +16,7 @@ jobs:
   greptile-review:
     name: Greptile Code Structure Analysis
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
 
     steps:
       - name: Checkout code
@@ -43,7 +43,7 @@ jobs:
   claude-review:
     name: Claude AI Review
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
 
     steps:
       - name: Checkout code

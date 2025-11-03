@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { HEADER_HEIGHT } from '../../styles/constants';
 import { MovieSection } from './components/MovieSection';
 import { MovieTypeFilter } from './components/MovieTypeFilter';
 import { useMovieQueries, type MovieType } from './hooks/useMovieQueries';
@@ -22,11 +23,11 @@ export default function ListPage() {
     } else {
       scrollToSection(selectedType);
     }
-  }, [selectedType, scrollToSection]);
+  }, [selectedType]);
 
   return (
     <div className="p-10 ">
-      <div className="sticky z-50 bg-black py-4 -mx-10 px-10 mb-4" style={{ top: '64px' }}>
+      <div className="sticky z-50 bg-black py-4 -mx-10 px-10 mb-4" style={{ top: HEADER_HEIGHT }}>
         <MovieTypeFilter types={MOVIE_TYPES} selectedType={selectedType} onTypeClick={handleTypeClick} />
       </div>
       {results.map((result, index) => (

@@ -1,4 +1,5 @@
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
+import { FILTER_HEIGHT, HEADER_HEIGHT, OFFSET } from '../../../styles/constants';
 import type { MovieType } from './useMovieQueries';
 
 export function useScrollToSection() {
@@ -9,25 +10,21 @@ export function useScrollToSection() {
     upcoming: null,
   });
 
-  const setSectionRef = (type: MovieType, el: HTMLElement | null) => {
+  const setSectionRef = useCallback((type: MovieType, el: HTMLElement | null) => {
     if (el) {
       sectionRefs.current[type] = el;
     }
-  };
+  }, []);
 
-  const scrollToSection = (selectedType: MovieType) => {
+  const scrollToSection = useCallback((selectedType: MovieType) => {
     const sectionRef = sectionRefs.current[selectedType];
     if (sectionRef) {
-      // Header(64px) + Filter(56px) + offset(20px) = 140px
-      const HEADER_HEIGHT = 64;
-      const FILTER_HEIGHT = 56;
-      const OFFSET = 20;
       const totalOffset = HEADER_HEIGHT + FILTER_HEIGHT + OFFSET;
 
       const targetPosition = sectionRef.getBoundingClientRect().top + window.scrollY - totalOffset;
       window.scrollTo({ top: targetPosition, behavior: 'smooth' });
     }
-  };
+  }, []);
 
   return { sectionRefs, setSectionRef, scrollToSection };
 }

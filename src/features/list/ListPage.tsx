@@ -24,7 +24,7 @@ export default function ListPage() {
     } else {
       scrollToSection(selectedType);
     }
-  }, [selectedType]);
+  }, [selectedType, scrollToSection]);
 
   return (
     <div className="px-10">

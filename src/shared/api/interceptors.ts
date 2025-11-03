@@ -30,7 +30,7 @@ const setupLoggingInterceptor = () => {
 
   // Request 시작 시간 기록 및 body 저장
   tmdbHttpClient.interceptors.request.use((config) => {
-    const requestId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const requestId = `${Date.now()}}`;
     const startTime = performance.now();
 
     // body가 있으면 파싱 (JSON 문자열이면 객체로 변환)

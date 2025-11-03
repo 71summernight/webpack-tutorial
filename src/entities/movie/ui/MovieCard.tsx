@@ -6,12 +6,11 @@ import { PopularBadge } from './PopularBadge';
 
 interface MovieCardProps {
   movie: Movie;
-  isLCP?: boolean;
   isPopular?: boolean;
   index: number;
 }
 
-export function MovieCard({ movie, isLCP = false, isPopular = false, index }: MovieCardProps) {
+export function MovieCard({ movie, isPopular = false, index }: MovieCardProps) {
   const posterSrc = movie.poster_path
     ? `${MOVIE_CONSTANTS.TMDB_IMAGE_BASE_URL}/${movie.poster_path}`
     : MOVIE_CONSTANTS.DEFAULT_POSTER_IMAGE;
@@ -25,7 +24,6 @@ export function MovieCard({ movie, isLCP = false, isPopular = false, index }: Mo
           alt={movie.title}
           width={MOVIE_CONSTANTS.POSTER_WIDTH}
           height={MOVIE_CONSTANTS.POSTER_HEIGHT}
-          fetchPriority={isLCP ? 'high' : 'low'}
           style={{
             width: '100%',
             height: '100%',

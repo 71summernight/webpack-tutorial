@@ -30,10 +30,10 @@ jobs:
         with:
           path: |
             node_modules/.cache
-            dist
-          key: ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          key: ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('webpack.*.js', 'babel.config.js', 'tsconfig.json') }}
           restore-keys: |
             ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-webpack-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -41,6 +41,8 @@ jobs:
       - name: Build
         run: pnpm build
         env:
+          # WARNING: 이 토큰은 프론트엔드 번들에 포함되어 클라이언트에 노출됩니다.
+          # TMDB Read-only API 토큰을 사용하며, 도메인 제한 및 Rate Limiting이 적용됩니다.
           TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}
           TMDB_BASE_URL: ${{ secrets.TMDB_BASE_URL }}
 
@@ -55,29 +57,49 @@ jobs:
       - name: Deploy to S3
         id: s3-deploy
         run: |
-          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ --delete
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+            --delete \
+            --metadata deployment-timestamp=$TIMESTAMP
         continue-on-error: false
+
+      - name: Test deployment
+        run: |
+          echo "Waiting for S3 propagation..."
+          sleep 5
+          curl -f https://d30jeeksrrdvnl.cloudfront.net/ || exit 1
 
       - name: Get changed files
         id: changed-files
         run: |
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep -E '\.(html|js|css|json)$' || echo "/*")
-          echo "paths=${CHANGED_FILES}" >> $GITHUB_OUTPUT
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep -E '\.(html|js|css|json|png|jpg|svg)$' | sed 's|^|/|' | tr '\n' ' ')
+          else
+            CHANGED_FILES="/*"
+          fi
+          echo "paths=${CHANGED_FILES:-/*}" >> $GITHUB_OUTPUT
 
       - name: Invalidate CloudFront cache
         run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths ${{ steps.changed-files.outputs.paths }}
+          PATHS="${{ steps.changed-files.outputs.paths }}"
+          if [ "$PATHS" = "/*" ]; then
+            aws cloudfront create-invalidation \
+              --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+              --paths "/*"
+          else
+            # CloudFront API requires each path as a separate argument
+            aws cloudfront create-invalidation \
+              --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+              --paths $PATHS
+          fi
 
       - name: Notify on failure
         if: failure()
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '❌ Deployment failed! Please check the logs.'
-            })
+            const sha = context.sha.substring(0, 7);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            console.error(`❌ Deployment failed for commit ${sha}`);
+            console.error(`See details: ${runUrl}`);

@@ -5,7 +5,6 @@ TMDB API를 활용한 영화 정보 제공 웹 애플리케이션
 ## 🌐 배포
 
 - **CloudFront**: https://d30jeeksrrdvnl.cloudfront.net/
-- **S3**: http://hyunjin-watcha.s3-website.ap-northeast-2.amazonaws.com/
 
 ## ✨ 주요 기능
 

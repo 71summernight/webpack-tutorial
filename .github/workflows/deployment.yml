@@ -1,9 +1,9 @@
-name: Deploy Next.js to S3 and invalidate CloudFront
+name: Deploy React App to S3 and CloudFront
 
 on:
   push:
     branches:
-      - main # 또는 master, 프로젝트의 기본 브랜치 이름에 맞게 조정
+      - main
   workflow_dispatch:
 
 jobs:
@@ -14,23 +14,70 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.10.0'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.18.2
+
+      - name: Cache Webpack build
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache
+            dist
+          key: ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: pnpm build
+        env:
+          TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}
+          TMDB_BASE_URL: ${{ secrets.TMDB_BASE_URL }}
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+          role-duration-seconds: 3600
 
       - name: Deploy to S3
+        id: s3-deploy
         run: |
-          aws s3 sync out/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }}/ --delete
+        continue-on-error: false
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep -E '\.(html|js|css|json)$' || echo "/*")
+          echo "paths=${CHANGED_FILES}" >> $GITHUB_OUTPUT
 
       - name: Invalidate CloudFront cache
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths ${{ steps.changed-files.outputs.paths }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Deployment failed! Please check the logs.'
+            })

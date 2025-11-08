@@ -69,29 +69,12 @@ jobs:
           sleep 5
           curl -f https://d30jeeksrrdvnl.cloudfront.net/ || exit 1
 
-      - name: Get changed files
-        id: changed-files
-        run: |
-          if git rev-parse HEAD^ >/dev/null 2>&1; then
-            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep -E '\.(html|js|css|json|png|jpg|svg)$' | sed 's|^|/|' | tr '\n' ' ')
-          else
-            CHANGED_FILES="/*"
-          fi
-          echo "paths=${CHANGED_FILES:-/*}" >> $GITHUB_OUTPUT
-
       - name: Invalidate CloudFront cache
         run: |
-          PATHS="${{ steps.changed-files.outputs.paths }}"
-          if [ "$PATHS" = "/*" ]; then
-            aws cloudfront create-invalidation \
-              --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-              --paths "/*"
-          else
-            # CloudFront API requires each path as a separate argument
-            aws cloudfront create-invalidation \
-              --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-              --paths $PATHS
-          fi
+          # 빌드 시 JS/CSS 파일명에 해시가 포함되므로 전체 캐시 무효화
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
 
       - name: Notify on failure
         if: failure()

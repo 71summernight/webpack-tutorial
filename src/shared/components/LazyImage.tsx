@@ -23,7 +23,9 @@ export function LazyImage({
   style = {},
   fetchPriority = 'high',
 }: LazyImageProps) {
-  const [imageSrc, setImageSrc] = useState<string>('');
+  // CLS 방지: 빈 SVG placeholder로 시작
+  const placeholder = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3C/svg%3E';
+  const [imageSrc, setImageSrc] = useState<string>(placeholder);
   const [isLoaded, setIsLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -32,22 +34,36 @@ export function LazyImage({
       ([entry]) => {
         if (entry.isIntersecting) {
           setImageSrc(src);
-          observer.disconnect(); // 이미지 로드 후 observer 완전 해제
+          observer.disconnect();
         }
       },
       {
-        rootMargin: '200px', // 요소가 화면에 200px 들어오면 로드 시작 (더 미리 로드)
+        rootMargin: '200px',
       },
     );
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
+    const currentImg = imgRef.current;
+    if (currentImg) {
+      observer.observe(currentImg);
     }
 
     return () => {
-      observer.disconnect(); // cleanup에서 안전하게 해제
+      observer.disconnect();
     };
   }, [src]);
+
+  // 브라우저가 캐시한 이미지 감지
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalHeight !== 0) {
+      // 이미 로드된 이미지 (브라우저 캐시)
+      setIsLoaded(true);
+    }
+  }, [imageSrc]);
+
+  const handleImageLoad = () => {
+    setIsLoaded(true);
+  };
 
   return (
     <div
@@ -55,6 +71,7 @@ export function LazyImage({
         aspectRatio: `${width} / ${height}`,
         overflow: 'hidden',
         backgroundColor: '#e5e7eb',
+        position: 'relative',
       }}
     >
       <img
@@ -68,15 +85,16 @@ export function LazyImage({
         decoding="async"
         fetchPriority={fetchPriority}
         role={onClick ? 'button' : undefined}
-        onLoad={() => setIsLoaded(true)}
+        onLoad={handleImageLoad}
         onClick={onClick}
         style={{
           transition: 'opacity 0.3s ease-in-out',
-          opacity: isLoaded ? 1 : 0.5,
+          opacity: isLoaded ? 1 : 0,
           width: '100%',
           height: '100%',
           objectFit: 'cover',
           cursor: onClick ? 'pointer' : 'default',
+          display: 'block',
           ...style,
         }}
       />

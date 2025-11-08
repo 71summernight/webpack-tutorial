@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UseCarouselStateOptions {
   itemCount: number;
@@ -19,8 +19,8 @@ export const useCarouselState = ({
 }: UseCarouselStateOptions) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const autoPlayIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoPlayIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 페이지 수 (itemCount와 동일하지만 명시적으로)
   const pageCount = itemCount;

@@ -3,7 +3,7 @@ import React from 'react';
 export default function Button({
   children,
   onClick,
-  className,
+  className = '',
   text,
   size = 'md',
 }: {

@@ -3,7 +3,7 @@ name: Deploy React App to S3 and CloudFront
 on:
   push:
     branches:
-      - main
+      - feature/hyunjin
   workflow_dispatch:
 
 jobs:

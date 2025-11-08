@@ -21,7 +21,7 @@ export function LazyImage({
   className = '',
   onClick,
   style = {},
-  fetchPriority = 'auto',
+  fetchPriority = 'high',
 }: LazyImageProps) {
   const [imageSrc, setImageSrc] = useState<string>('');
   const [isLoaded, setIsLoaded] = useState(false);
@@ -36,7 +36,7 @@ export function LazyImage({
         }
       },
       {
-        rootMargin: '50px', // 요소가 화면에 50px 들어오면 로드 시작
+        rootMargin: '200px', // 요소가 화면에 200px 들어오면 로드 시작 (더 미리 로드)
       },
     );
 

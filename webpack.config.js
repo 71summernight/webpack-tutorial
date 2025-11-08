@@ -3,6 +3,7 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import DotenvPlugin from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import { fileURLToPath } from 'url';
@@ -46,10 +47,17 @@ export default {
         terserOptions: {
           compress: {
             drop_console: !isDevelopment,
-            pure_funcs: isDevelopment ? [] : ['console.log', 'console.debug'],
+            drop_debugger: !isDevelopment,
+            pure_funcs: isDevelopment ? [] : ['console.log', 'console.debug', 'console.warn'],
+            unused: true,
+            passes: !isDevelopment ? 3 : 1,
           },
           format: {
             comments: false,
+            beautify: false,
+          },
+          mangle: {
+            reserved: [],
           },
         },
         extractComments: false,
@@ -144,5 +152,13 @@ export default {
       safe: false,
       silent: true,
     }),
+    !isDevelopment &&
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: false,
+        reportFilename: 'bundle-report.html',
+        generateStatsFile: true,
+        statsFilename: 'bundle-stats.json',
+      }),
   ].filter(Boolean), // false 값 제거
 };

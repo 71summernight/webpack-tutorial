@@ -14,16 +14,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24.10.0'
-          cache: 'pnpm'
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 10.18.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23.7.0'
+          cache: 'pnpm'
 
       - name: Cache Webpack build
         uses: actions/cache@v4
@@ -67,7 +67,7 @@ jobs:
         run: |
           echo "Waiting for S3 propagation..."
           sleep 5
-          curl -f https://d30jeeksrrdvnl.cloudfront.net/ || exit 1
+          curl -f ${{ secrets.CLOUDFRONT_URL }} || exit 1
 
       - name: Get changed files
         id: changed-files

@@ -19,6 +19,9 @@ export default function Header() {
             <li>
               <Link to={PAGES.search()}>Search</Link>
             </li>
+            <li>
+              <Link to={PAGES.detail('231231s')}>TEST</Link>
+            </li>
           </ul>
         </nav>
       </div>

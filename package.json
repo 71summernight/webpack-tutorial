@@ -15,7 +15,7 @@
   },
   "packageManager": "pnpm@10.18.2",
   "engines": {
-    "node": "^24.10.0"
+    "node": "^23.7.0"
   },
   "keywords": [],
   "author": "",

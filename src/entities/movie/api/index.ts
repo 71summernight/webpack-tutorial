@@ -1,5 +1,5 @@
 import { tmdbHttpClient } from '../../../shared/api/httpClient';
-import { MovieDetail, MovieListResponse, SearchParams } from '../types';
+import { MovieDetail, MovieGenreListResponse, MovieListResponse, SearchParams } from '../types';
 
 export const movieApi = {
   // 인기 영화 목록
@@ -39,5 +39,10 @@ export const movieApi = {
   multiSearch: (query: string, page: number = 1) =>
     tmdbHttpClient.get('/search/multi', {
       params: { query, page },
+    }),
+  // 영화 장르 목록
+  getMovieGenres: (language: string = 'ko-KR') =>
+    tmdbHttpClient.get<MovieGenreListResponse>('/genre/movie/list', {
+      params: { language },
     }),
 } as const;

@@ -1,5 +1,10 @@
 // Movie 엔티티 타입
 
+export interface Genre {
+  id: number;
+  name: string;
+}
+
 export interface SearchParams {
   query?: string;
   page?: number;
@@ -33,7 +38,7 @@ export interface MovieListResponse {
 
 export interface MovieDetail extends Movie {
   budget: number;
-  genres: { id: number; name: string }[];
+  genres: Genre[];
   homepage: string | null;
   imdb_id: string | null;
   production_companies: { id: number; name: string; logo_path: string | null; origin_country: string }[];
@@ -43,4 +48,8 @@ export interface MovieDetail extends Movie {
   spoken_languages: { english_name: string; iso_639_1: string; name: string }[];
   status: string;
   tagline: string | null;
+}
+
+export interface MovieGenreListResponse {
+  genres: Genre[];
 }

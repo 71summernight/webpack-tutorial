@@ -2,9 +2,13 @@
 
 TMDB API를 활용한 영화 정보 제공 웹 애플리케이션
 
-## 🌐 배포
+## 🌐 배포 환경
 
-- **CloudFront**: https://d30jeeksrrdvnl.cloudfront.net/
+| 환경       | URL                                    | 설명           |
+| ---------- | -------------------------------------- | -------------- |
+| Production | https://d30jeeksrrdvnl.cloudfront.net/ | CloudFront CDN |
+
+> **참고:** 프로덕션 환경은 자동 배포됩니다 (`feature/hyunjin` 브랜치 push 시)
 
 ## ✨ 주요 기능
 

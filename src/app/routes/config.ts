@@ -22,7 +22,7 @@ export const routeConfig = {
     path: '/search',
     title: 'Search',
     component: SearchPage,
-    link: () => '/search',
+    link: (query?: string) => `/search${query ? `?query=${query}` : ''}`,
   },
   detail: {
     id: 'detail' as const,

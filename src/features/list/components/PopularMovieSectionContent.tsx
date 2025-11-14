@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
+import { PAGES } from '../../../app/routes/paths';
 import { MovieCard } from '../../../entities/movie/ui/MovieCard';
+import { getPosterUrl } from '../../../entities/movie/utils';
 import { Carousel, CarouselContainer } from '../../../shared/components/Carousel';
 import { CarouselStateProvider } from '../../../shared/components/Carousel/CarouselStateContext';
 import { DotPagination } from '../../../shared/components/Pagination';
@@ -15,7 +17,6 @@ const CONTAINER_GRID_CLASS = `grid grid-cols-${ITEMS_PER_PAGE} gap-4`;
 
 interface PopularMovieSectionContentProps {
   type: MovieType;
-  itemsPerPage?: number;
   showControls?: boolean;
 }
 
@@ -27,7 +28,19 @@ export function PopularMovieSectionContent({ type, showControls = true }: Popula
   const movies = data.results;
 
   const movieCards = useMemo(
-    () => movies.map((movie, index) => <MovieCard key={movie.id} movie={movie} index={index} isPopular={true} />),
+    () =>
+      movies.map((movie, index) => (
+        <MovieCard
+          key={movie.id}
+          src={getPosterUrl(movie.poster_path)}
+          alt={movie.title}
+          width={290}
+          height={163}
+          to={`${PAGES.detail(movie.id)}`}
+          index={index}
+          isPopular={true}
+        />
+      )),
     [movies],
   );
 

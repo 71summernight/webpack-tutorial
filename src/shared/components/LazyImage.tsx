@@ -72,6 +72,7 @@ export function LazyImage({
         overflow: 'hidden',
         backgroundColor: '#e5e7eb',
         position: 'relative',
+        borderRadius: style?.borderRadius,
       }}
     >
       <img
@@ -93,7 +94,7 @@ export function LazyImage({
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          cursor: onClick ? 'pointer' : 'default',
+          cursor: onClick ? 'pointer' : 'inherit',
           display: 'block',
           ...style,
         }}

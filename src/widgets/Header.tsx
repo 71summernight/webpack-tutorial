@@ -20,7 +20,7 @@ export default function Header() {
               <Link to={PAGES.search()}>Search</Link>
             </li>
             <li>
-              <Link to={PAGES.detail('231dsfds231s')}>TEST</Link>
+              <Link to={PAGES.detail('231dsfds231s')}>TEST_2</Link>
             </li>
           </ul>
         </nav>

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from '../../../shared/components/ErrorBoundary';
 import Loading from '../../../shared/ui/Loading';
 import { MOVIE_TYPE_LABELS, MovieType } from '../constants/movieTypes';
-import { GridMovieSectionContent } from './GridMovieSectionContent';
+import { PopularMovieSectionContent } from './PopularMovieSectionContent';
 
 interface PopularMovieSectionProps {
   type: MovieType;
@@ -17,7 +17,7 @@ export default function PopularMovieSection({ type, setSectionRef }: PopularMovi
       </h2>
       <ErrorBoundary>
         <Suspense fallback={<Loading />}>
-          <GridMovieSectionContent type={type} />
+          <PopularMovieSectionContent type={type} />
         </Suspense>
       </ErrorBoundary>
     </section>

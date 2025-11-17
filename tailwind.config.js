@@ -7,6 +7,9 @@ export default {
         bg: '#000000',
         primary: '#FF0358',
       },
+      backgroundImage: {
+        'gradient-radial-center': 'radial-gradient(ellipse at center, rgba(29,31,29,0) 0%, rgba(29,31,29,1) 70%)',
+      },
     },
   },
   plugins: [],

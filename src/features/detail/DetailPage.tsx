@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { ErrorBoundary } from '../../shared/components/ErrorBoundary';
 import Loading from '../../shared/ui/Loading';
+import DetailMain from './components/DetailMain';
 import { useMovieDetail } from './hooks/useMovieDetail';
 
 export default function DetailPage() {
@@ -15,14 +16,7 @@ export default function DetailPage() {
   return (
     <ErrorBoundary>
       <Suspense fallback={<Loading />}>
-        <div>
-          <h1>{movie.title}</h1>
-          <p>{movie.overview}</p>
-          <p>{movie.release_date}</p>
-          <p>{movie.runtime}</p>
-          <p>{movie.vote_average}</p>
-          <p>{movie.vote_count}</p>
-        </div>
+        <DetailMain movie={movie} />
       </Suspense>
     </ErrorBoundary>
   );

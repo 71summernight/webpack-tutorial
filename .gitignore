@@ -25,10 +25,7 @@ dist-ssr
 *.sln
 *.sw?
 
+.env.*
 # Environment variables
-.env.development
-.env.production
-.env.local
-.env.*.local
 # Keep .env.example for sharing configuration structure
 !.env.example

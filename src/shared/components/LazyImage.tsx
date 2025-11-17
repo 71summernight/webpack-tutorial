@@ -73,6 +73,8 @@ export function LazyImage({
         backgroundColor: '#e5e7eb',
         position: 'relative',
         borderRadius: style?.borderRadius,
+        width: width,
+        height: height,
       }}
     >
       <img

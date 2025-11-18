@@ -40,6 +40,7 @@ export const movieApi = {
     tmdbHttpClient.get('/search/multi', {
       params: { query, page },
     }),
+
   // 영화 장르 목록
   getMovieGenres: (language: string = 'ko-KR') =>
     tmdbHttpClient.get<MovieGenreListResponse>('/genre/movie/list', {

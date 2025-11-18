@@ -1,5 +1,5 @@
-import { lazy } from 'react';
-import { HEADER_HEIGHT } from '../../styles/constants';
+import React, { lazy } from 'react';
+import { HEADER_HEIGHT } from '@/styles/constants';
 import { MovieTypeFilter } from './components/MovieTypeFilter';
 
 import { useMovieTypeSelection } from './hooks/useMovieTypeSelection';
@@ -9,7 +9,7 @@ const NowPlayingMovieSection = lazy(() => import('./components/NowPlayingMovieSe
 const TopRatedMovieSection = lazy(() => import('./components/TopRatedMovieSection'));
 const UpcomingMovieSection = lazy(() => import('./components/UpcomingMovieSection'));
 
-export default function ListPage() {
+const ListPage = () => {
   const { selectedType, handleTypeClick, MOVIE_TYPES, setSectionRef } = useMovieTypeSelection();
 
   return (
@@ -23,4 +23,6 @@ export default function ListPage() {
       <UpcomingMovieSection type={'upcoming'} setSectionRef={setSectionRef} />{' '}
     </div>
   );
-}
+};
+
+export default ListPage;

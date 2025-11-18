@@ -1,19 +1,19 @@
 import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 
-export interface CarouselContextValue {
+export type CarouselContextValue = {
   currentIndex: number;
   isTransitioning: boolean;
   moveNext: () => void;
   movePrev: () => void;
   moveTo: (index: number) => void;
-}
+};
 
 const CarouselStateContext = createContext<CarouselContextValue | undefined>(undefined);
 
-interface CarouselStateProviderProps {
+type CarouselStateProviderProps = {
   children: ReactNode;
   value: CarouselContextValue;
-}
+};
 
 /**
  * CarouselStateProvider - Context 제공자
@@ -33,7 +33,8 @@ export const CarouselStateProvider: React.FC<CarouselStateProviderProps> = ({ ch
  * 캐러셀 상태를 받는 훅
  * CarouselContainer 내부에서만 사용 가능
  */
-export const useCarouselContextState = (): CarouselContextValue => {
+type UseCarouselContextStateHook = () => CarouselContextValue;
+export const useCarouselContextState: UseCarouselContextStateHook = () => {
   const context = useContext(CarouselStateContext);
   if (!context) {
     throw new Error('useCarouselContextState must be used within CarouselStateProvider');

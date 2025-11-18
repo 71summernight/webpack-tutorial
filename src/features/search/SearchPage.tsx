@@ -2,7 +2,7 @@ import SearchItem from './components/SearchItem';
 import useHandleKeyword from './hooks/useHandleKeyword';
 import { useMovieSearch } from './hooks/useMovieSearch';
 
-export default function SearchPage() {
+const SearchPage = () => {
   const { queryFromUrl } = useHandleKeyword();
   const { data: searchResults } = useMovieSearch(queryFromUrl ? { query: queryFromUrl } : undefined);
 
@@ -24,4 +24,6 @@ export default function SearchPage() {
       </ul>
     </div>
   );
-}
+};
+
+export default SearchPage;

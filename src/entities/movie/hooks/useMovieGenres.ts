@@ -1,11 +1,14 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { movieApi } from '../api';
+import { MovieGenreListResponse } from '../types';
 
-export function useMovieGenres() {
-  return useSuspenseQuery({
+type UseMovieGenresHook = () => ReturnType<typeof useSuspenseQuery<MovieGenreListResponse>>;
+
+export const useMovieGenres: UseMovieGenresHook = () => {
+  return useSuspenseQuery<MovieGenreListResponse>({
     queryKey: ['movies', 'genres'],
     queryFn: () => movieApi.getMovieGenres(),
     staleTime: 24 * 60 * 60 * 1000, // 24시간 (장르는 거의 변하지 않음)
     gcTime: 24 * 60 * 60 * 1000,
   });
-}
+};

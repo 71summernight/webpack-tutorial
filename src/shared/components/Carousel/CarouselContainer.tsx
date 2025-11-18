@@ -1,15 +1,15 @@
 import React, { ReactNode, useMemo, useRef } from 'react';
 
-interface CarouselContainerProps {
+type CarouselContainerProps = {
   children: ReactNode;
   containerClassName?: string;
-}
+};
 
 /**
  * CarouselContainer - 캐러셀 레이아웃 컨테이너
  * 메모이제이션으로 불필요한 리렌더링 방지
  */
-export const CarouselContainer: React.FC<CarouselContainerProps> = ({ children, containerClassName }) => {
+export const CarouselContainer = ({ children, containerClassName }: CarouselContainerProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // className 메모이제이션

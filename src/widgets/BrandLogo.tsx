@@ -1,4 +1,8 @@
-export default function BrandLogo({ onClick }: { onClick?: () => void }) {
+type BrandLogoProps = {
+  onClick?: () => void;
+};
+
+const BrandLogo = ({ onClick }: BrandLogoProps) => {
   return (
     <svg
       width="88"
@@ -23,4 +27,6 @@ export default function BrandLogo({ onClick }: { onClick?: () => void }) {
       ></path>
     </svg>
   );
-}
+};
+
+export default BrandLogo;

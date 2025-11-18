@@ -1,18 +1,18 @@
 // Movie 엔티티 타입
 
-export interface Genre {
+export type Genre = {
   id: number;
   name: string;
-}
+};
 
-export interface SearchParams {
+export type SearchParams = {
   query?: string;
   page?: number;
   language?: string;
   include_adult?: boolean;
-}
+};
 
-export interface Movie {
+export type Movie = {
   id: number;
   title: string;
   overview: string;
@@ -27,16 +27,16 @@ export interface Movie {
   original_language?: string;
   original_title?: string;
   media_type?: string;
-}
+};
 
-export interface MovieListResponse {
+export type MovieListResponse = {
   page: number;
   results: Movie[];
   total_pages: number;
   total_results: number;
-}
+};
 
-export interface MovieDetail extends Movie {
+export type MovieDetail = Movie & {
   budget: number;
   genres: Genre[];
   homepage: string | null;
@@ -48,8 +48,8 @@ export interface MovieDetail extends Movie {
   spoken_languages: { english_name: string; iso_639_1: string; name: string }[];
   status: string;
   tagline: string | null;
-}
+};
 
-export interface MovieGenreListResponse {
+export type MovieGenreListResponse = {
   genres: Genre[];
-}
+};

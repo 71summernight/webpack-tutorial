@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom';
-import { PAGES } from '../../../app/routes/paths';
-import { useMovieGenres } from '../../../entities/movie/hooks/useMovieGenres';
-import { Movie } from '../../../entities/movie/types';
-import { MovieCard } from '../../../entities/movie/ui/MovieCard';
-import { getGenreNames, getPosterUrl } from '../../../entities/movie/utils';
+import { PAGES } from '@/app/routes/paths';
+import { useMovieGenres } from '@/entities/movie/hooks/useMovieGenres';
+import { Movie } from '@/entities/movie/types';
+import { MovieCard } from '@/entities/movie/ui/MovieCard';
+import { getGenreNames, getPosterUrl } from '@/entities/movie/utils';
 
-export default function SearchItem({ result }: { result: Movie }) {
+type SearchItemProps = {
+  result: Movie;
+};
+
+const SearchItem = ({ result }: SearchItemProps) => {
   const { data: movieGenres } = useMovieGenres();
 
   if (!movieGenres)
@@ -34,4 +38,6 @@ export default function SearchItem({ result }: { result: Movie }) {
       </li>
     </Link>
   );
-}
+};
+
+export default SearchItem;

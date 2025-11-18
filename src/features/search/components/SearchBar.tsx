@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { PAGES } from '../../../app/routes/paths';
-import SearchIcon from '../../../widgets/SearchIcon';
+import { PAGES } from '@/app/routes/paths';
+import SearchIcon from '@/widgets/SearchIcon';
 import useHandleKeyword from '../hooks/useHandleKeyword';
 
-export default function SearchBar() {
+const SearchBar = () => {
   const navigate = useNavigate();
   const { handleSearch, handleKeyDown, searchValue, setSearchValue, queryFromUrl } = useHandleKeyword();
 
@@ -23,4 +23,6 @@ export default function SearchBar() {
       />
     </div>
   );
-}
+};
+
+export default SearchBar;

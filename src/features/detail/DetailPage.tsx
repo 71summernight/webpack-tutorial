@@ -1,11 +1,11 @@
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
-import { ErrorBoundary } from '../../shared/components/ErrorBoundary';
-import Loading from '../../shared/ui/Loading';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import Loading from '@/shared/ui/Loading';
 import DetailMain from './components/DetailMain';
 import { useMovieDetail } from './hooks/useMovieDetail';
 
-export default function DetailPage() {
+const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const movieId = id ? Number(id) : undefined;
 
@@ -20,4 +20,6 @@ export default function DetailPage() {
       </Suspense>
     </ErrorBoundary>
   );
-}
+};
+
+export default DetailPage;

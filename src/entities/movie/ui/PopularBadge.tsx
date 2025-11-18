@@ -1,18 +1,18 @@
-interface PopularBadgeProps {
+type PopularBadgeProps = {
   index: number;
-}
+};
 
-export function PopularBadge({ index }: PopularBadgeProps) {
+export const PopularBadge = ({ index }: PopularBadgeProps) => {
   return (
     <span
       className="absolute text-white rounded-tl-md z-10 text-7xl font-bold italic"
       style={{
-        bottom: '-15px',
-        left: '-10px',
+        bottom: '-1px',
+        left: '-1px',
         opacity: 0.85,
       }}
     >
       {index + 1}
     </span>
   );
-}
+};

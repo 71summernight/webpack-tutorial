@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo } from 'react';
 import { useCarouselContextState } from './CarouselStateContext';
 
-interface CarouselProps {
+type CarouselProps = {
   children: ReactNode[];
   itemsPerPage?: number;
   containerClassName?: string;
@@ -10,7 +10,7 @@ interface CarouselProps {
   showControls?: boolean;
   onPrevClick?: () => void;
   onNextClick?: () => void;
-}
+};
 
 // 버튼 스타일 상수화 (렌더링 외부)
 const PREV_BUTTON_CLASS =

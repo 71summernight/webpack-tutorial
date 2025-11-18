@@ -1,21 +1,32 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { PAGES } from '../../../app/routes/paths';
+import { PAGES } from '@/app/routes/paths';
 
-export default function useHandleKeyword() {
+type UseHandleKeywordReturn = {
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  handleSearch: () => void;
+  searchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  queryFromUrl: string;
+};
+
+type UseHandleKeywordHook = () => UseHandleKeywordReturn;
+const useHandleKeyword: UseHandleKeywordHook = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState('');
   const [urlSearchParams] = useSearchParams();
   const queryFromUrl = urlSearchParams.get('query') || '';
 
-  const handleSearch = () => {
+  type HandleSearchFn = () => void;
+  const handleSearch: HandleSearchFn = () => {
     const trimmedValue = searchValue.trim();
     if (trimmedValue) {
       navigate(PAGES.search(encodeURIComponent(trimmedValue)));
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  type HandleKeyDownFn = (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  const handleKeyDown: HandleKeyDownFn = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
     }
@@ -28,4 +39,6 @@ export default function useHandleKeyword() {
     setSearchValue,
     queryFromUrl,
   };
-}
+};
+
+export default useHandleKeyword;

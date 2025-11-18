@@ -1,19 +1,19 @@
 import { Link } from 'react-router-dom';
-import { LazyImage } from '../../../shared/components/LazyImage';
+import { LazyImage } from '@/shared/components/LazyImage';
 import { PopularBadge } from './PopularBadge';
 
-interface MovieCardProps {
+type MovieCardProps = {
   src: string;
   alt: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   to: string;
   isPopular?: boolean;
   index?: number;
   style?: React.CSSProperties;
-}
+};
 
-export function MovieCard({ src, alt, width, height, to, isPopular = false, index, style }: MovieCardProps) {
+export const MovieCard = ({ src, alt, width, height, to, isPopular = false, index, style }: MovieCardProps) => {
   return (
     <li className="relative" style={{ width, height, ...style }}>
       <Link to={`${to}`} className="relative block">
@@ -33,4 +33,4 @@ export function MovieCard({ src, alt, width, height, to, isPopular = false, inde
       </Link>
     </li>
   );
-}
+};

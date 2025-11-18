@@ -1,22 +1,32 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-interface UseCarouselStateOptions {
+type UseCarouselStateOptions = {
   itemCount: number;
   initialIndex?: number;
   loop?: boolean;
   autoPlay?: boolean;
   autoPlayInterval?: number;
   transitionDuration?: number;
-}
+};
 
-export const useCarouselState = ({
+type UseCarouselStateReturn = {
+  currentIndex: number;
+  isTransitioning: boolean;
+  moveNext: () => void;
+  movePrev: () => void;
+  moveTo: (index: number) => void;
+  pageCount: number;
+};
+
+type UseCarouselStateHook = (options: UseCarouselStateOptions) => UseCarouselStateReturn;
+export const useCarouselState: UseCarouselStateHook = ({
   itemCount,
   initialIndex = 0,
   loop = true,
   autoPlay = false,
   autoPlayInterval = 5000,
   transitionDuration = 300,
-}: UseCarouselStateOptions) => {
+}) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -26,31 +36,36 @@ export const useCarouselState = ({
   const pageCount = itemCount;
 
   // 다음/이전 인덱스 계산 로직 메모이제이션 (순수 함수)
-  const getNextIndex = useCallback(
-    (prevIndex: number) => (loop ? (prevIndex + 1) % pageCount : Math.min(prevIndex + 1, pageCount - 1)),
+  type GetNextIndexFn = (prevIndex: number) => number;
+  const getNextIndex: GetNextIndexFn = useCallback(
+    (prevIndex) => (loop ? (prevIndex + 1) % pageCount : Math.min(prevIndex + 1, pageCount - 1)),
     [loop, pageCount],
   );
 
-  const getPrevIndex = useCallback(
-    (prevIndex: number) => (loop ? (prevIndex - 1 + pageCount) % pageCount : Math.max(prevIndex - 1, 0)),
+  type GetPrevIndexFn = (prevIndex: number) => number;
+  const getPrevIndex: GetPrevIndexFn = useCallback(
+    (prevIndex) => (loop ? (prevIndex - 1 + pageCount) % pageCount : Math.max(prevIndex - 1, 0)),
     [loop, pageCount],
   );
 
   // 다음 인덱스로 이동
-  const moveNext = useCallback(() => {
+  type MoveNextFn = () => void;
+  const moveNext: MoveNextFn = useCallback(() => {
     setIsTransitioning(true);
     setCurrentIndex(getNextIndex);
   }, [getNextIndex]);
 
   // 이전 인덱스로 이동
-  const movePrev = useCallback(() => {
+  type MovePrevFn = () => void;
+  const movePrev: MovePrevFn = useCallback(() => {
     setIsTransitioning(true);
     setCurrentIndex(getPrevIndex);
   }, [getPrevIndex]);
 
   // 특정 인덱스로 이동
-  const moveTo = useCallback(
-    (index: number) => {
+  type MoveToFn = (index: number) => void;
+  const moveTo: MoveToFn = useCallback(
+    (index) => {
       if (index < 0 || index >= pageCount) return;
       setIsTransitioning(true);
       setCurrentIndex(index);

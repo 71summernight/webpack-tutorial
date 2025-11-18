@@ -1,24 +1,18 @@
 import { TMDB_BASE_URL, TMDB_TIMEOUT, TMDB_TOKEN } from './constants';
 
-interface FetchOptions {
+type FetchOptions = {
   params?: Record<string, any>;
   body?: any;
   timeout?: number;
-}
+};
 
-interface RequestInterceptor {
-  (config: RequestConfig): RequestConfig | Promise<RequestConfig>;
-}
+type RequestInterceptor = (config: RequestConfig) => RequestConfig | Promise<RequestConfig>;
 
-interface ResponseInterceptor<T> {
-  (response: T): T | Promise<T>;
-}
+type ResponseInterceptor<T> = (response: T) => T | Promise<T>;
 
-interface ErrorInterceptor {
-  (error: Error): Error | Promise<Error>;
-}
+type ErrorInterceptor = (error: Error) => Error | Promise<Error>;
 
-interface RequestConfig {
+type RequestConfig = {
   url: string;
   method: string;
   headers: HeadersInit;
@@ -28,9 +22,9 @@ interface RequestConfig {
     startTime?: number;
     requestId?: string;
   };
-}
+};
 
-interface HttpClientInstance {
+type HttpClientInstance = {
   get: <T>(endpoint: string, options?: FetchOptions) => Promise<T>;
   post: <T>(endpoint: string, options?: FetchOptions) => Promise<T>;
   put: <T>(endpoint: string, options?: FetchOptions) => Promise<T>;
@@ -44,9 +38,10 @@ interface HttpClientInstance {
       use: <T>(onFulfilled: ResponseInterceptor<T>, onRejected?: ErrorInterceptor) => void;
     };
   };
-}
+};
 
-const buildUrl = (baseUrl: string, endpoint: string, params?: Record<string, any>): string => {
+type BuildUrlFn = (baseUrl: string, endpoint: string, params?: Record<string, any>) => string;
+const buildUrl: BuildUrlFn = (baseUrl, endpoint, params) => {
   const fullPath = `${baseUrl}${endpoint}`;
   const url = new URL(fullPath);
 
@@ -61,7 +56,8 @@ const buildUrl = (baseUrl: string, endpoint: string, params?: Record<string, any
   return url.toString();
 };
 
-const buildHeaders = (token?: string): HeadersInit => {
+type BuildHeadersFn = (token?: string) => HeadersInit;
+const buildHeaders: BuildHeadersFn = (token) => {
   const headers: HeadersInit = {
     accept: 'application/json',
   };
@@ -74,11 +70,12 @@ const buildHeaders = (token?: string): HeadersInit => {
   return headers;
 };
 
-const createHttpClient = (baseUrl: string, token: string | undefined): HttpClientInstance => {
+type CreateHttpClientFn = (baseUrl: string, token: string | undefined) => HttpClientInstance;
+const createHttpClient: CreateHttpClientFn = (baseUrl, token) => {
   const requestInterceptors: Array<[RequestInterceptor, ErrorInterceptor | undefined]> = [];
   const responseInterceptors: Array<[ResponseInterceptor<any>, ErrorInterceptor | undefined]> = [];
 
-  const request = async <T>(method: string, endpoint: string, options: FetchOptions = {}): Promise<T> => {
+  async function request<T>(method: string, endpoint: string, options: FetchOptions = {}): Promise<T> {
     const url = buildUrl(baseUrl, endpoint, options.params);
     const timeout = options.timeout ?? TMDB_TIMEOUT;
 
@@ -147,29 +144,45 @@ const createHttpClient = (baseUrl: string, token: string | undefined): HttpClien
 
       throw error;
     }
+  }
+
+  type GetFn = <T>(endpoint: string, options?: FetchOptions) => Promise<T>;
+  const get: GetFn = (endpoint, options) => request('GET', endpoint, options);
+
+  type PostFn = <T>(endpoint: string, options?: FetchOptions) => Promise<T>;
+  const post: PostFn = (endpoint, options) => request('POST', endpoint, options);
+
+  type PutFn = <T>(endpoint: string, options?: FetchOptions) => Promise<T>;
+  const put: PutFn = (endpoint, options) => request('PUT', endpoint, options);
+
+  type DeleteFn = <T>(endpoint: string, options?: FetchOptions) => Promise<T>;
+  const deleteFn: DeleteFn = (endpoint, options) => request('DELETE', endpoint, options);
+
+  type PatchFn = <T>(endpoint: string, options?: FetchOptions) => Promise<T>;
+  const patch: PatchFn = (endpoint, options) => request('PATCH', endpoint, options);
+
+  type RequestInterceptorUseFn = (onFulfilled: RequestInterceptor, onRejected?: ErrorInterceptor) => void;
+  const requestInterceptorUse: RequestInterceptorUseFn = (onFulfilled, onRejected) => {
+    requestInterceptors.push([onFulfilled, onRejected]);
+  };
+
+  type ResponseInterceptorUseFn = <T>(onFulfilled: ResponseInterceptor<T>, onRejected?: ErrorInterceptor) => void;
+  const responseInterceptorUse: ResponseInterceptorUseFn = (onFulfilled, onRejected) => {
+    responseInterceptors.push([onFulfilled, onRejected]);
   };
 
   return {
-    get: <T>(endpoint: string, options?: FetchOptions): Promise<T> => request<T>('GET', endpoint, options),
-
-    post: <T>(endpoint: string, options?: FetchOptions): Promise<T> => request<T>('POST', endpoint, options),
-
-    put: <T>(endpoint: string, options?: FetchOptions): Promise<T> => request<T>('PUT', endpoint, options),
-
-    delete: <T>(endpoint: string, options?: FetchOptions): Promise<T> => request<T>('DELETE', endpoint, options),
-
-    patch: <T>(endpoint: string, options?: FetchOptions): Promise<T> => request<T>('PATCH', endpoint, options),
-
+    get,
+    post,
+    put,
+    delete: deleteFn,
+    patch,
     interceptors: {
       request: {
-        use: (onFulfilled: RequestInterceptor, onRejected?: ErrorInterceptor) => {
-          requestInterceptors.push([onFulfilled, onRejected]);
-        },
+        use: requestInterceptorUse,
       },
       response: {
-        use: <T>(onFulfilled: ResponseInterceptor<T>, onRejected?: ErrorInterceptor) => {
-          responseInterceptors.push([onFulfilled, onRejected]);
-        },
+        use: responseInterceptorUse,
       },
     },
   };

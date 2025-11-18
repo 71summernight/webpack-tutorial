@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react';
 import { useCarouselContextState } from '../Carousel/CarouselStateContext';
 
-interface DotPaginationProps {
+type DotPaginationProps = {
   pageCount: number;
-}
+};
 
 /**
  * 점(dot) 스타일의 페이지네이션 컴포넌트
  * CarouselStateContext에서 상태를 자동으로 구독
  */
-export const DotPagination: React.FC<DotPaginationProps> = ({ pageCount }) => {
+export const DotPagination = ({ pageCount }: DotPaginationProps) => {
   const { currentIndex, isTransitioning, moveTo } = useCarouselContextState();
   const pageArray = useMemo(() => Array.from({ length: pageCount }, (_, i) => i), [pageCount]);
 

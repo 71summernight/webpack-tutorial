@@ -4,7 +4,8 @@ import { tmdbHttpClient } from './httpClient';
  * 토큰 만료 시 자동 재로그인 interceptor
  * 401 Unauthorized 에러 발생 시 로그인 페이지로 이동
  */
-const setupAuthInterceptor = () => {
+type SetupAuthInterceptorFn = () => void;
+const setupAuthInterceptor: SetupAuthInterceptorFn = () => {
   tmdbHttpClient.interceptors.response.use(
     (data) => data,
     (error) => {
@@ -22,7 +23,8 @@ const setupAuthInterceptor = () => {
  * 요청/응답 로깅 및 성능 모니터링 interceptor
  * 모든 API 요청의 시간을 측정하고 콘솔에 기록
  */
-const setupLoggingInterceptor = () => {
+type SetupLoggingInterceptorFn = () => void;
+const setupLoggingInterceptor: SetupLoggingInterceptorFn = () => {
   const isDev = process.env.NODE_ENV === 'development';
 
   // 글로벌 요청 메타데이터 저장소
@@ -117,7 +119,8 @@ const setupLoggingInterceptor = () => {
  * 모든 interceptor 초기화
  * App 컴포넌트가 마운트될 때 호출
  */
-export const initializeInterceptors = () => {
+type InitializeInterceptorsFn = () => void;
+export const initializeInterceptors: InitializeInterceptorsFn = () => {
   setupAuthInterceptor();
   setupLoggingInterceptor();
 };

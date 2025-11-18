@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
-import { PAGES } from '../../../app/routes/paths';
-import { MovieCard } from '../../../entities/movie/ui/MovieCard';
-import { getPosterUrl } from '../../../entities/movie/utils';
-import { Carousel, CarouselContainer } from '../../../shared/components/Carousel';
-import { CarouselStateProvider } from '../../../shared/components/Carousel/CarouselStateContext';
-import { DotPagination } from '../../../shared/components/Pagination';
-import { useCarouselState as useCarouselStateHook } from '../../../shared/hooks/useCarouselState';
+import React, { useMemo } from 'react';
+import { PAGES } from '@/app/routes/paths';
+import { MovieCard } from '@/entities/movie/ui/MovieCard';
+import { getPosterUrl } from '@/entities/movie/utils';
+import { Carousel, CarouselContainer } from '@/shared/components/Carousel';
+import { CarouselStateProvider } from '@/shared/components/Carousel/CarouselStateContext';
+import { DotPagination } from '@/shared/components/Pagination';
+import { useCarouselState as useCarouselStateHook } from '@/shared/hooks/useCarouselState';
 import { MovieType } from '../constants/movieTypes';
 import { useMovieQuery } from '../hooks/useMovieQueries';
 
@@ -15,12 +15,12 @@ const ITEM_CLASS_NAME = 'w-full h-auto';
 const TRANSITION_DURATION = 300;
 const CONTAINER_GRID_CLASS = `grid grid-cols-${ITEMS_PER_PAGE} gap-4`;
 
-interface PopularMovieSectionContentProps {
+type PopularMovieSectionContentProps = {
   type: MovieType;
   showControls?: boolean;
-}
+};
 
-export function PopularMovieSectionContent({ type, showControls = true }: PopularMovieSectionContentProps) {
+export const PopularMovieSectionContent = ({ type, showControls = true }: PopularMovieSectionContentProps) => {
   const { data } = useMovieQuery(type);
 
   if (!data?.results) return null;
@@ -34,8 +34,8 @@ export function PopularMovieSectionContent({ type, showControls = true }: Popula
           key={movie.id}
           src={getPosterUrl(movie.poster_path)}
           alt={movie.title}
-          width={290}
-          height={163}
+          width={300}
+          height={460}
           to={`${PAGES.detail(movie.id)}`}
           index={index}
           isPopular={true}
@@ -72,4 +72,4 @@ export function PopularMovieSectionContent({ type, showControls = true }: Popula
       </CarouselContainer>
     </CarouselStateProvider>
   );
-}
+};

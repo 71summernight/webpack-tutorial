@@ -1,11 +1,15 @@
 import clsx from 'clsx';
-import { useMovieGenres } from '../../../entities/movie/hooks/useMovieGenres';
-import { MovieDetail } from '../../../entities/movie/types';
-import { getGenreName, getPosterUrl } from '../../../entities/movie/utils';
-import { LazyImage } from '../../../shared/components/LazyImage';
-import { StarRating } from '../../../shared/components/StarRating/StarRating';
+import { useMovieGenres } from '@/entities/movie/hooks/useMovieGenres';
+import { MovieDetail } from '@/entities/movie/types';
+import { getGenreName, getPosterUrl } from '@/entities/movie/utils';
+import { LazyImage } from '@/shared/components/LazyImage';
+import { StarRating } from '@/shared/components/StarRating/StarRating';
 
-export default function DetailMain({ movie }: { movie: MovieDetail }) {
+interface DetailMainProps {
+  movie: MovieDetail;
+}
+
+const DetailMain = ({ movie }: DetailMainProps) => {
   const { data: movieGenres } = useMovieGenres();
 
   return (
@@ -30,4 +34,6 @@ export default function DetailMain({ movie }: { movie: MovieDetail }) {
       <StarRating rating={movie.vote_average} size={80} showScore />
     </section>
   );
-}
+};
+
+export default DetailMain;

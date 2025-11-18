@@ -1,8 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { movieApi } from '../../../entities/movie/api';
-import { MovieListResponse, SearchParams } from '../../../entities/movie/types';
+import { movieApi } from '@/entities/movie/api';
+import { MovieListResponse, SearchParams } from '@/entities/movie/types';
 
-export const useMovieSearch = (params: SearchParams | undefined) => {
+type UseMovieSearchHook = (params: SearchParams | undefined) => ReturnType<typeof useSuspenseQuery<MovieListResponse>>;
+export const useMovieSearch: UseMovieSearchHook = (params) => {
   return useSuspenseQuery<MovieListResponse>({
     queryKey: ['search-movies', params],
     queryFn: () => movieApi.searchMovies(params!),

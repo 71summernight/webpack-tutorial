@@ -93,4 +93,4 @@ jobs:
             --paths "/*"
 
       - name: Deployment complete
-        run: echo "🚀 Deployment completed successfully!"
+        run: echo "🚀 Deployment completed successfully with cache headers!"

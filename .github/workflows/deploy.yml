@@ -3,13 +3,13 @@ name: Deploy to S3 and CloudFront
 on:
   push:
     branches:
-      - main  # main 브랜치에 push될 때 자동 배포
-      - feature/hyunjin  # feature/hyunjin 브랜치에 push될 때도 자동 배포
-  workflow_dispatch:  # 수동 실행도 가능
+      - main # main 브랜치에 push될 때 자동 배포
+  workflow_dispatch: # 수동 실행도 가능
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
@@ -36,52 +36,60 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Deploy index.html to S3 (no-cache)
+      - name: Deploy static assets to S3 (parallel)
         run: |
-          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html \
-            --cache-control "no-cache, no-store, must-revalidate" \
-            --metadata-directive REPLACE
-
-      - name: Deploy JS files to S3 (long-term cache)
-        run: |
+          # JS, CSS, assets 병렬 업로드
           if [ -d "dist/js" ]; then
             aws s3 sync dist/js s3://${{ secrets.S3_BUCKET_NAME }}/js \
               --cache-control "s-maxage=31536000, max-age=0, immutable" \
-              --delete
+              --delete &
           fi
 
-      - name: Deploy CSS files to S3 (long-term cache)
-        run: |
           if [ -d "dist/css" ]; then
             aws s3 sync dist/css s3://${{ secrets.S3_BUCKET_NAME }}/css \
               --cache-control "s-maxage=31536000, max-age=0, immutable" \
-              --delete
+              --delete &
           fi
 
-      - name: Deploy assets to S3 (long-term cache)
-        run: |
           if [ -d "dist/assets" ]; then
             aws s3 sync dist/assets s3://${{ secrets.S3_BUCKET_NAME }}/assets \
               --cache-control "s-maxage=31536000, max-age=0, immutable" \
-              --delete
+              --delete &
           fi
 
-      - name: Deploy remaining files to S3
-        run: |
+          # 기타 파일 업로드
           aws s3 sync dist s3://${{ secrets.S3_BUCKET_NAME }} \
             --exclude "index.html" \
             --exclude "js/*" \
             --exclude "css/*" \
             --exclude "assets/*" \
             --cache-control "s-maxage=31536000, max-age=0, immutable" \
-            --delete
+            --delete &
+
+          # 모든 백그라운드 작업 완료 대기
+          wait
+
+      - name: Deploy index.html to S3 (no-cache)
+        run: |
+          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html \
+            --cache-control "no-cache, no-store, must-revalidate" \
+            --metadata-directive REPLACE
+
+      - name: Check if CloudFront ID exists
+        id: check-cf
+        run: |
+          if [ -n "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Invalidate CloudFront cache
-        if: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID != '' }}
+        if: steps.check-cf.outputs.exists == 'true'
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/index.html" "/*"
+            --paths "/*"
 
       - name: Deployment complete
         run: echo "🚀 Deployment completed successfully!"

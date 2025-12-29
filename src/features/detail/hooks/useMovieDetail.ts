@@ -1,13 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { movieApi } from '../../../entities/movie/api';
-import { MovieDetail } from '../../../entities/movie/types';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { movieApi } from '@/entities/movie/api';
+import { MovieDetail } from '@/entities/movie/types';
 
-export const useMovieDetail = (movieId: number | undefined) => {
-  return useQuery<MovieDetail>({
+type UseMovieDetailHook = (movieId: number | undefined) => ReturnType<typeof useSuspenseQuery<MovieDetail>>;
+export const useMovieDetail: UseMovieDetailHook = (movieId) => {
+  return useSuspenseQuery<MovieDetail>({
     queryKey: ['movie', movieId],
     queryFn: () => movieApi.getMovieDetail(movieId!),
-    enabled: movieId !== undefined,
-    staleTime: 10 * 60 * 1000, // 10분
-    gcTime: 30 * 60 * 1000, // 30분
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };

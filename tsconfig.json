@@ -4,11 +4,21 @@
     "target": "es5", // 변환할 JavaScript 버전
     "module": "commonjs", // 모듈 시스템 (e.g. commonjs, esnext)
     "lib": ["ES2020", "DOM", "DOM.Iterable"], // ★ Iterable 지원
+    "types": ["node"], // Node.js 타입 정의 추가 (process.env 사용을 위해)
     "outDir": "./dist", // 컴파일된 파일 출력 폴더
     "strict": true,
     "noImplicitAny": false, // any를 warning으로 처리
     "esModuleInterop": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/app/*": ["src/app/*"],
+      "@/entities/*": ["src/entities/*"],
+      "@/features/*": ["src/features/*"],
+      "@/shared/*": ["src/shared/*"],
+      "@/widgets/*": ["src/widgets/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": []

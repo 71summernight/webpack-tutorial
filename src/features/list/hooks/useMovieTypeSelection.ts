@@ -1,11 +1,20 @@
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { MOVIE_TYPES, MovieType } from '../constants/movieTypes';
 
-export function useMovieTypeSelection() {
+type UseMovieTypeSelectionReturn = {
+  selectedType: MovieType;
+  handleTypeClick: (type: MovieType) => void;
+  MOVIE_TYPES: readonly MovieType[];
+  setSectionRef: (type: MovieType, element: HTMLElement | null) => void;
+};
+
+type UseMovieTypeSelectionHook = () => UseMovieTypeSelectionReturn;
+export const useMovieTypeSelection: UseMovieTypeSelectionHook = () => {
   const [selectedType, setSelectedType] = useState<MovieType>(MOVIE_TYPES[0]);
   const sectionRefs = useRef<Map<MovieType, HTMLElement>>(new Map());
 
-  const handleTypeClick = (type: MovieType) => {
+  type HandleTypeClickFn = (type: MovieType) => void;
+  const handleTypeClick: HandleTypeClickFn = useCallback((type) => {
     setSelectedType(type);
 
     requestAnimationFrame(() => {
@@ -18,15 +27,16 @@ export function useMovieTypeSelection() {
         }
       }
     });
-  };
+  }, []);
 
-  const setSectionRef = (type: MovieType, element: HTMLElement | null) => {
+  type SetSectionRefFn = (type: MovieType, element: HTMLElement | null) => void;
+  const setSectionRef: SetSectionRefFn = useCallback((type, element) => {
     if (element) {
       sectionRefs.current.set(type, element);
     } else {
       sectionRefs.current.delete(type);
     }
-  };
+  }, []);
 
-  return { selectedType, handleTypeClick, MOVIE_TYPES: [...MOVIE_TYPES], setSectionRef };
-}
+  return { selectedType, handleTypeClick, MOVIE_TYPES, setSectionRef };
+};

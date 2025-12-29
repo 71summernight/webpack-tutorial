@@ -1,12 +1,15 @@
-import { HEADER_HEIGHT } from '../../styles/constants';
+import React, { lazy } from 'react';
+import { HEADER_HEIGHT } from '@/styles/constants';
 import { MovieTypeFilter } from './components/MovieTypeFilter';
-import NowPlayingMovieSection from './components/NowPlayingMovieSection';
-import PopularMovieSection from './components/PopularMovieSection';
-import TopRatedMovieSection from './components/TopRatedMovieSection';
-import UpcomingMovieSection from './components/UpcomingMovieSection';
+
 import { useMovieTypeSelection } from './hooks/useMovieTypeSelection';
 
-export default function ListPage() {
+const PopularMovieSection = lazy(() => import('./components/PopularMovieSection'));
+const NowPlayingMovieSection = lazy(() => import('./components/NowPlayingMovieSection'));
+const TopRatedMovieSection = lazy(() => import('./components/TopRatedMovieSection'));
+const UpcomingMovieSection = lazy(() => import('./components/UpcomingMovieSection'));
+
+const ListPage = () => {
   const { selectedType, handleTypeClick, MOVIE_TYPES, setSectionRef } = useMovieTypeSelection();
 
   return (
@@ -17,7 +20,9 @@ export default function ListPage() {
       <PopularMovieSection type={'popular'} setSectionRef={setSectionRef} />
       <NowPlayingMovieSection type={'now_playing'} setSectionRef={setSectionRef} />
       <TopRatedMovieSection type={'top_rated'} setSectionRef={setSectionRef} />
-      <UpcomingMovieSection type={'upcoming'} setSectionRef={setSectionRef} />
+      <UpcomingMovieSection type={'upcoming'} setSectionRef={setSectionRef} />{' '}
     </div>
   );
-}
+};
+
+export default ListPage;

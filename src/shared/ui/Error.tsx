@@ -1,15 +1,14 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { PAGES } from '../../app/routes/paths';
+import { PAGES } from '@/app/routes/paths';
 import Button from './Button';
 
-interface ErrorProps {
+type ErrorProps = {
   error?: Error;
   onRetry?: () => void;
-}
+};
 
-export default function ErrorPage({ error, onRetry }: ErrorProps) {
+const ErrorPage = ({ error, onRetry }: ErrorProps) => {
   const navigate = useNavigate();
 
   return (
@@ -23,4 +22,6 @@ export default function ErrorPage({ error, onRetry }: ErrorProps) {
       </div>
     </div>
   );
-}
+};
+
+export default ErrorPage;

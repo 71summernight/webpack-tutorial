@@ -1,21 +1,29 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { SearchParams } from '../../entities/movie/types';
+import SearchItem from './components/SearchItem';
+import useHandleKeyword from './hooks/useHandleKeyword';
 import { useMovieSearch } from './hooks/useMovieSearch';
 
-export default function SearchPage() {
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useState<SearchParams>({
-    query: '',
-    page: 1,
-  });
+const SearchPage = () => {
+  const { queryFromUrl } = useHandleKeyword();
+  const { data: searchResults } = useMovieSearch(queryFromUrl ? { query: queryFromUrl } : undefined);
 
-  const { data: searchResults, isLoading, error } = useMovieSearch(searchParams.query ? searchParams : undefined);
+  if (searchResults?.results.length === 0) {
+    return (
+      <div className="px-10">
+        <h1>검색 결과가 없습니다.</h1>
+      </div>
+    );
+  }
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSearchParams((prev) => ({ ...prev, page: 1 }));
-  };
+  return (
+    <div className="px-10">
+      <h1>Search Results</h1>
+      <ul className="space-y-2">
+        {searchResults.results.map((result) => (
+          <SearchItem key={result.id} result={result} />
+        ))}
+      </ul>
+    </div>
+  );
+};
 
-  return <div>SearchPage</div>;
-}
+export default SearchPage;

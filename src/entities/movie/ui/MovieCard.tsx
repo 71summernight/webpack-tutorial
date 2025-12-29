@@ -1,36 +1,36 @@
 import { Link } from 'react-router-dom';
-import { LazyImage } from '../../../shared/components/LazyImage';
-import { MOVIE_CONSTANTS } from '../constants';
-import { Movie } from '../types';
+import { LazyImage } from '@/shared/components/LazyImage';
 import { PopularBadge } from './PopularBadge';
 
-interface MovieCardProps {
-  movie: Movie;
+type MovieCardProps = {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  to: string;
   isPopular?: boolean;
-  index: number;
-}
+  index?: number;
+  style?: React.CSSProperties;
+};
 
-export function MovieCard({ movie, isPopular = false, index }: MovieCardProps) {
-  const posterSrc = movie.poster_path
-    ? `${MOVIE_CONSTANTS.TMDB_IMAGE_BASE_URL}/${movie.poster_path}`
-    : MOVIE_CONSTANTS.DEFAULT_POSTER_IMAGE;
-
+export const MovieCard = ({ src, alt, width, height, to, isPopular = false, index, style }: MovieCardProps) => {
   return (
-    <li className="relative">
-      <Link to={`/detail/${movie.id}`} className="relative block">
-        {isPopular && <PopularBadge index={index} />}
+    <li className="relative" style={{ width, height, ...style }}>
+      <Link to={`${to}`} className="relative block">
+        {isPopular && typeof index === 'number' && <PopularBadge index={index} />}
         <LazyImage
-          src={posterSrc}
-          alt={movie.title}
-          width={MOVIE_CONSTANTS.POSTER_WIDTH}
-          height={MOVIE_CONSTANTS.POSTER_HEIGHT}
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
           style={{
             width: '100%',
             height: '100%',
             objectFit: 'cover',
+            borderRadius: style?.borderRadius,
           }}
         />
       </Link>
     </li>
   );
-}
+};

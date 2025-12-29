@@ -1,13 +1,20 @@
 import { tmdbHttpClient } from '@/shared/api/httpClient';
-import { MovieDetail, MovieGenreListResponse, MovieListResponse, SearchParams } from '../types';
+import {
+  MovieDetail,
+  MovieGenreListResponse,
+  MovieListResponse,
+  MovieReviewListResponse,
+  SearchParams,
+} from '../types';
 
 type GetPopularMoviesFn = (page?: number, language?: string) => Promise<MovieListResponse>;
 type GetNowPlayingMoviesFn = (page?: number) => Promise<MovieListResponse>;
 type GetTopRatedMoviesFn = (page?: number) => Promise<MovieListResponse>;
 type GetUpcomingMoviesFn = (page?: number) => Promise<MovieListResponse>;
 type GetMovieDetailFn = (movieId: number) => Promise<MovieDetail>;
+type GetMovieReviewsFn = (movieId: number) => Promise<MovieReviewListResponse>;
 type SearchMoviesFn = (params: SearchParams) => Promise<MovieListResponse>;
-type MultiSearchFn = (query: string, page?: number) => Promise<any>;
+type MultiSearchFn = (query: string, page?: number) => Promise<MovieListResponse>;
 type GetMovieGenresFn = (language?: string) => Promise<MovieGenreListResponse>;
 
 export const movieApi = {
@@ -55,4 +62,10 @@ export const movieApi = {
     tmdbHttpClient.get<MovieGenreListResponse>('/genre/movie/list', {
       params: { language },
     })) as GetMovieGenresFn,
+
+  // 영화 리뷰
+  getMovieReviews: ((movieId) =>
+    tmdbHttpClient.get<MovieReviewListResponse>(`/movie/${movieId}/reviews`, {
+      params: { movieId, language: 'en-US' },
+    })) as GetMovieReviewsFn,
 } as const;

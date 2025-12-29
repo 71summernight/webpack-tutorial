@@ -36,7 +36,7 @@ module.exports = merge(common, {
     port: 3000,
     open: true,
     hot: true,
-    historyApiFallback: false,
+    historyApiFallback: true,
     compress: true,
     // host: '0.0.0.0', allowedHosts: 'all', // 필요 시 외부 접근 허용
   },

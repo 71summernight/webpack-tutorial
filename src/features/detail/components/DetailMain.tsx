@@ -1,15 +1,17 @@
-import clsx from 'clsx';
 import { useMovieGenres } from '@/entities/movie/hooks/useMovieGenres';
-import { MovieDetail } from '@/entities/movie/types';
+import { MovieDetail, MovieReviewListResponse } from '@/entities/movie/types';
 import { getGenreName, getPosterUrl } from '@/entities/movie/utils';
 import { LazyImage } from '@/shared/components/LazyImage';
 import { StarRating } from '@/shared/components/StarRating/StarRating';
+import clsx from 'clsx';
+import ReviewList from './ReviewList';
 
 interface DetailMainProps {
   movie: MovieDetail;
+  reviews: MovieReviewListResponse;
 }
 
-const DetailMain = ({ movie }: DetailMainProps) => {
+const DetailMain = ({ movie, reviews }: DetailMainProps) => {
   const { data: movieGenres } = useMovieGenres();
 
   return (
@@ -32,6 +34,7 @@ const DetailMain = ({ movie }: DetailMainProps) => {
         )}
       </div>
       <StarRating rating={movie.vote_average} size={80} showScore />
+      <ReviewList reviews={reviews.results} />
     </section>
   );
 };

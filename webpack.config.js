@@ -26,7 +26,7 @@ export default {
   devServer: {
     port: 3000,
     hot: true,
-    historyApiFallback: false,
+    historyApiFallback: true,
     compress: true,
     headers: {
       'X-Content-Type-Options': 'nosniff',

@@ -30,8 +30,8 @@ export const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const { currentIndex, isTransitioning } = useCarouselContextState();
 
-  // children을 배열로 정규화 (메모이제이션)
-  const childrenArray = useMemo(() => (Array.isArray(children) ? children : [children]), [children]);
+  // children을 배열로 정규화 (React.Children.toArray로 안정적인 key 보장)
+  const childrenArray = useMemo(() => React.Children.toArray(children), [children]);
 
   // 현재 페이지의 시작 인덱스와 보이는 아이템 계산 (통합)
   const visibleItems = useMemo(() => {
@@ -71,9 +71,9 @@ export const Carousel: React.FC<CarouselProps> = ({
       }}
       className={gridContainerClassName}
     >
-      {visibleItems.map((item, index) => (
-        <div key={`visible-item-${index}`} style={itemStyle} className={itemClassName || ''}>
-          {item}
+      {visibleItems.map((child) => (
+        <div key={(child as React.ReactElement).key} style={itemStyle} className={itemClassName || ''}>
+          {child}
         </div>
       ))}
 

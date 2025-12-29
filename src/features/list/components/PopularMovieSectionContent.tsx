@@ -13,7 +13,7 @@ const ITEMS_PER_PAGE = 4;
 const CONTAINER_CLASS_NAME = 'w-full';
 const ITEM_CLASS_NAME = 'w-full h-auto';
 const TRANSITION_DURATION = 300;
-const CONTAINER_GRID_CLASS = `grid grid-cols-${ITEMS_PER_PAGE} gap-4`;
+const CONTAINER_GRID_CLASS = 'grid grid-cols-4 gap-4';
 
 type PopularMovieSectionContentProps = {
   type: MovieType;
@@ -23,9 +23,8 @@ type PopularMovieSectionContentProps = {
 export const PopularMovieSectionContent = ({ type, showControls = true }: PopularMovieSectionContentProps) => {
   const { data } = useMovieQuery(type);
 
-  if (!data?.results) return null;
-
-  const movies = data.results;
+  const movies = data?.results ?? [];
+  const pageCount = Math.ceil(movies.length / ITEMS_PER_PAGE) || 1;
 
   const movieCards = useMemo(
     () =>
@@ -44,8 +43,6 @@ export const PopularMovieSectionContent = ({ type, showControls = true }: Popula
     [movies],
   );
 
-  const pageCount = Math.ceil(movies.length / ITEMS_PER_PAGE);
-
   // 캐러셀 상태 관리
   const carouselState = useCarouselStateHook({
     itemCount: pageCount,
@@ -55,6 +52,8 @@ export const PopularMovieSectionContent = ({ type, showControls = true }: Popula
     autoPlayInterval: 1000,
     transitionDuration: TRANSITION_DURATION,
   });
+
+  if (!data?.results) return null;
 
   return (
     <CarouselStateProvider value={carouselState}>

@@ -1,8 +1,9 @@
-type BrandLogoProps = {
-  onClick?: () => void;
-};
+import { type ComponentPropsWithoutRef } from 'react';
 
-const BrandLogo = ({ onClick }: BrandLogoProps) => {
+type BrandLogoProps = ComponentPropsWithoutRef<'svg'>;
+
+type BrandLogoComponent = React.FC<BrandLogoProps>;
+const BrandLogo: BrandLogoComponent = ({ onClick, className, ...rest }) => {
   return (
     <svg
       width="88"
@@ -11,7 +12,8 @@ const BrandLogo = ({ onClick }: BrandLogoProps) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       onClick={onClick}
-      className={onClick ? 'cursor-pointer' : ''}
+      className={`${onClick ? 'cursor-pointer' : ''} ${className || ''}`}
+      {...rest}
     >
       <path
         fillRule="evenodd"

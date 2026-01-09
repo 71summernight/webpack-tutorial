@@ -10,19 +10,19 @@ type GridMovieSectionContentProps = {
 
 export const GridMovieSectionContent = ({ type }: GridMovieSectionContentProps) => {
   const { data } = useMovieQuery(type);
+  const movies = data?.results ?? [];
   if (!data?.results) return null;
 
   return (
     <ul className="grid grid-cols-4 gap-4">
-      {data.results.map((movie, index) => (
+      {movies.map((movie, rank) => (
         <MovieCard
           key={movie.id}
-          width={290}
-          height={163}
           src={getPosterUrl(movie.poster_path)}
           alt={movie.title}
           to={PAGES.detail(movie.id)}
-          index={index}
+          variant="medium"
+          rank={rank}
         />
       ))}
     </ul>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { MovieReview } from '@/entities/movie/types';
 
 const TMDB_AVATAR_BASE_URL = 'https://image.tmdb.org/t/p/w45';
@@ -30,9 +30,9 @@ export const useReviewCard = (review: MovieReview) => {
 
   const { author, author_details, content, created_at } = review;
 
-  const avatarUrl = useMemo(() => getAvatarUrl(author_details.avatar_path), [author_details.avatar_path]);
-  const initial = useMemo(() => getInitial(author), [author]);
-  const formattedDate = useMemo(() => formatDate(created_at), [created_at]);
+  const avatarUrl = getAvatarUrl(author_details.avatar_path);
+  const initial = getInitial(author);
+  const formattedDate = formatDate(created_at);
 
   const isLongContent = content.length > MAX_CONTENT_LENGTH;
   const displayContent = isExpanded || !isLongContent ? content : `${content.slice(0, MAX_CONTENT_LENGTH)}...`;

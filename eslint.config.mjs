@@ -47,7 +47,7 @@ export default [
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
       'react/react-in-jsx-scope': 'off',
-      // prettier/prettier 규칙 제거!
+      'react/prop-types': 'off', // TypeScript가 타입 체크하므로 불필요
     },
   },
   {

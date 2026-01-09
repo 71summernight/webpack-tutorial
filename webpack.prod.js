@@ -1,10 +1,12 @@
-// webpack/webpack.prod.js
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import DotenvPlugin from 'dotenv-webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 import common from './webpack.common.js';
+
+const useAnalyzer = process.env.USE_ANALYZER === 'true';
 
 export default merge(common, {
   mode: 'production',
@@ -68,15 +70,23 @@ export default merge(common, {
   },
 
   plugins: [
+    new DotenvPlugin({
+      path: '.env.production',
+      systemvars: true,
+    }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].[contenthash:8].css',
       chunkFilename: 'css/[name].[contenthash:8].chunk.css',
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      reportFilename: 'bundle-report.html',
-      openAnalyzer: false,
-    }),
+    ...(useAnalyzer
+      ? [
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'bundle-report.html',
+            openAnalyzer: false,
+          }),
+        ]
+      : []),
   ],
 
   performance: {

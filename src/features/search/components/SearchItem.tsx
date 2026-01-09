@@ -19,10 +19,8 @@ const SearchItem = ({ result }: SearchItemProps) => {
         <MovieCard
           src={getPosterUrl(result.poster_path)}
           alt={result.title}
-          width={48}
-          height={70}
           to={PAGES.detail(result.id)}
-          style={{ borderRadius: '5px' }}
+          variant="small"
         />
         <div className="flex-1">
           <h3 className="font-medium">{result.title}</h3>

@@ -1,8 +1,8 @@
 type PopularBadgeProps = {
-  index: number;
+  rank: number;
 };
 
-export const PopularBadge = ({ index }: PopularBadgeProps) => {
+export const PopularBadge = ({ rank }: PopularBadgeProps) => {
   return (
     <span
       className="absolute text-white rounded-tl-md z-10 text-7xl font-bold italic"
@@ -12,7 +12,7 @@ export const PopularBadge = ({ index }: PopularBadgeProps) => {
         opacity: 0.85,
       }}
     >
-      {index + 1}
+      {rank + 1}
     </span>
   );
 };

@@ -1,7 +1,10 @@
-// webpack/webpack.dev.js
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import DotenvPlugin from 'dotenv-webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { merge } from 'webpack-merge';
 import common from './webpack.common.js';
+
+const useAnalyzer = process.env.USE_ANALYZER === 'true';
 
 export default merge(common, {
   mode: 'development',
@@ -30,5 +33,20 @@ export default merge(common, {
     ],
   },
 
-  plugins: [new ReactRefreshWebpackPlugin()],
+  plugins: [
+    new ReactRefreshWebpackPlugin(),
+    new DotenvPlugin({
+      path: '.env.development',
+      systemvars: true,
+    }),
+    ...(useAnalyzer
+      ? [
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'bundle-report.html',
+            openAnalyzer: false,
+          }),
+        ]
+      : []),
+  ],
 });

@@ -1,18 +1,15 @@
-// webpack/webpack.common.js
-import DotenvPlugin from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..');
 
 export default {
   entry: './src/index.tsx',
 
   output: {
-    path: path.resolve(rootDir, 'dist'),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'js/[name].[contenthash:8].js',
     chunkFilename: 'js/[name].[contenthash:8].chunk.js',
     clean: true,
@@ -23,9 +20,7 @@ export default {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
-      '@': path.resolve(rootDir, 'src'),
-      '@/app': path.resolve(rootDir, 'src/app'),
-      '@/shared': path.resolve(rootDir, 'src/shared'),
+      '@': path.resolve(__dirname, 'src'),
     },
   },
 
@@ -56,9 +51,6 @@ export default {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
-    }),
-    new DotenvPlugin({
-      systemvars: true,
     }),
   ],
 };

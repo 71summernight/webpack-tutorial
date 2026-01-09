@@ -16,27 +16,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '23'
-          cache: 'npm'
+          node-version: '22'
+          cache: 'pnpm'
 
       - name: Cache Webpack build
         uses: actions/cache@v4
         with:
           path: |
             node_modules/.cache
-          key: ${{ runner.os }}-webpack-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('webpack.*.js', 'babel.config.js', 'tsconfig.json') }}
+          key: ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('webpack.*.js', 'babel.config.js', 'tsconfig.json') }}
           restore-keys: |
-            ${{ runner.os }}-webpack-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-
             ${{ runner.os }}-webpack-
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: pnpm build
         env:
           NODE_ENV: production
           TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}

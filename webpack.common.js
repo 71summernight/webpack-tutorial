@@ -1,65 +1,64 @@
-// webpack.common.js
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
-const { DefinePlugin } = require('webpack');
+// webpack/webpack.common.js
+import DotenvPlugin from 'dotenv-webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-/** @type {import('webpack').Configuration} */
-module.exports = {
-  entry: './src/index',
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
+
+export default {
+  entry: './src/index.tsx',
+
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js', // 파일명은 dev/prod에서 덮어씀
-    chunkFilename: '[name].chunk.js',
+    path: path.resolve(rootDir, 'dist'),
+    filename: 'js/[name].[contenthash:8].js',
+    chunkFilename: 'js/[name].[contenthash:8].chunk.js',
     clean: true,
+    publicPath: '/',
+    assetModuleFilename: 'assets/[name].[hash:8][ext]',
   },
+
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '@': path.resolve(rootDir, 'src'),
+      '@/app': path.resolve(rootDir, 'src/app'),
+      '@/shared': path.resolve(rootDir, 'src/shared'),
+    },
   },
+
   module: {
     rules: [
-      // JS/TS
+      // JS/TS - 공통
       {
         test: /\.[jt]sx?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  modules: false,
-                  bugfixes: true,
-                  useBuiltIns: 'usage',
-                  corejs: '3',
-                  targets: {
-                    browsers: ['last 2 versions', '> 0.5%', 'not dead'],
-                  },
-                },
-              ],
-              ['@babel/preset-react', { runtime: 'automatic' }],
-              '@babel/preset-typescript',
-            ],
-          },
+          options: { cacheDirectory: true },
         },
       },
-      // 이미지 / 폰트
-      { test: /\.(png|jpe?g|gif|svg)$/i, type: 'asset/resource' },
-      { test: /\.(eot|ttf|woff2?)$/i, type: 'asset/resource' },
+      // 이미지 - 공통
+      {
+        test: /\.(png|jpe?g|gif|svg|webp)$/i,
+        type: 'asset/resource',
+      },
+      // 폰트 - 공통
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
+
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      inject: 'body',
     }),
-    new Dotenv({ path: `./.env.${process.env.NODE_ENV || 'development'}` }),
-    new DefinePlugin({
-      'process.env.API_URL': JSON.stringify(process.env.API_URL || 'http://localhost:3000'),
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-      'process.env.APP_PHASE': JSON.stringify(process.env.APP_PHASE || 'local'),
+    new DotenvPlugin({
+      systemvars: true,
     }),
   ],
 };

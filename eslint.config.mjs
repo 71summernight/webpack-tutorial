@@ -1,17 +1,18 @@
 // eslint.config.mjs
-import globals from 'globals';
 import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import eslintConfigPrettier from 'eslint-config-prettier'; // 변경!
 import pluginReact from 'eslint-plugin-react';
-import prettier from 'eslint-plugin-prettier/recommended';
+import reactCompiler from 'eslint-plugin-react-compiler';
+import storybook from 'eslint-plugin-storybook';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default [
-  // ✅ prettier recommended 설정을 가장 먼저 추가 (포맷 우선순위 유지)
-  prettier,
-
-  // ✅ 공통 적용 대상
   {
-    files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
+    ignores: ['dist/', 'node_modules/', 'webpack.*.js', 'webpack.*.cjs'],
+  },
+  {
+    files: ['src/**/*.{js,mjs,ts,jsx,tsx}'],
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
@@ -21,23 +22,43 @@ export default [
       },
     },
   },
-
-  // ✅ eslint 기본 JS 규칙
   pluginJs.configs.recommended,
-
-  // ✅ typescript-eslint 기본 규칙
   ...tseslint.configs.recommended,
-
-  // ✅ React 플러그인 Flat config 적용
-  pluginReact.configs.flat.recommended,
-
-  // ✅ 커스텀 규칙
   {
+    plugins: {
+      'react-compiler': reactCompiler,
+    },
     rules: {
-      'no-unused-vars': 'error',
-      'no-undef': 'error',
-      'react/react-in-jsx-scope': 'off', // Next.js는 React import 불필요
-      'prettier/prettier': ['error', { endOfLine: 'auto' }], // prettier 연동 강화
+      'react-compiler/react-compiler': 'error',
     },
   },
+  {
+    ...pluginReact.configs.flat.recommended,
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off', // TypeScript가 타입 체크하므로 불필요
+    },
+  },
+  {
+    files: ['src/**/*.{js,mjs,jsx}'],
+    rules: {
+      'no-unused-vars': 'warn',
+      'no-undef': 'error',
+      'react/react-in-jsx-scope': 'off',
+      // prettier/prettier 규칙 제거!
+    },
+  },
+  ...storybook.configs['flat/recommended'],
+  eslintConfigPrettier, // 마지막에! ESLint 스타일 규칙 비활성화
 ];

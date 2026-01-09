@@ -1,0 +1,122 @@
+name: Deploy to S3 and CloudFront
+
+on:
+  push:
+    branches:
+      - main # main 브랜치에 push될 때 자동 배포
+      - feature/hyunjin
+  workflow_dispatch: # 수동 실행도 가능
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Cache Webpack build
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache
+          key: ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('webpack.*.js', 'babel.config.js', 'tsconfig.json') }}
+          restore-keys: |
+            ${{ runner.os }}-webpack-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-webpack-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+        env:
+          NODE_ENV: production
+          TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}
+          TMDB_BASE_URL: ${{ secrets.TMDB_BASE_URL }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Deploy static assets to S3 (parallel)
+        run: |
+          # JS, CSS, assets 병렬 업로드
+          if [ -d "dist/js" ]; then
+            aws s3 sync dist/js s3://${{ secrets.S3_BUCKET_NAME }}/js \
+              --cache-control "s-maxage=31536000, max-age=0, immutable" \
+              --delete &
+          fi
+
+          if [ -d "dist/css" ]; then
+            aws s3 sync dist/css s3://${{ secrets.S3_BUCKET_NAME }}/css \
+              --cache-control "s-maxage=31536000, max-age=0, immutable" \
+              --delete &
+          fi
+
+          if [ -d "dist/assets" ]; then
+            aws s3 sync dist/assets s3://${{ secrets.S3_BUCKET_NAME }}/assets \
+              --cache-control "s-maxage=31536000, max-age=0, immutable" \
+              --delete &
+          fi
+
+          # 기타 파일 업로드
+          aws s3 sync dist s3://${{ secrets.S3_BUCKET_NAME }} \
+            --exclude "index.html" \
+            --exclude "js/*" \
+            --exclude "css/*" \
+            --exclude "assets/*" \
+            --cache-control "s-maxage=31536000, max-age=0, immutable" \
+            --delete &
+
+          # 모든 백그라운드 작업 완료 대기
+          wait
+
+      - name: Deploy index.html to S3 (no-cache)
+        run: |
+          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html \
+            --cache-control "no-cache, no-store, must-revalidate" \
+            --metadata-directive REPLACE
+
+      - name: Check if CloudFront ID exists
+        id: check-cf
+        run: |
+          if [ -n "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Invalidate CloudFront cache
+        if: steps.check-cf.outputs.exists == 'true'
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+
+      - name: Deployment complete
+        run: echo "🚀 Deployment completed successfully with cache headers!"
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = context.sha.substring(0, 7);
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+            console.error(`❌ Deployment failed for commit ${sha}`);
+            console.error(`See details: ${runUrl}`);

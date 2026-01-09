@@ -1,56 +1,46 @@
-// webpack.prod.js
-const { merge } = require('webpack-merge');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const common = require('./webpack.common');
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import DotenvPlugin from 'dotenv-webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { merge } from 'webpack-merge';
+import common from './webpack.common.js';
 
-/** @type {import('webpack').Configuration} */
-module.exports = merge(common, {
+const useAnalyzer = process.env.USE_ANALYZER === 'true';
+
+export default merge(common, {
   mode: 'production',
+
+  devtool: 'source-map',
+
   output: {
-    filename: '[name].[contenthash].js',
-    chunkFilename: '[name].[contenthash].chunk.js',
+    // common의 output을 덮어쓰지 않고 추가/수정할 부분만
   },
+
   module: {
     rules: [
-      // CSS: 운영은 파일로 추출
+      // CSS - 프로덕션용 (별도 파일 추출)
       {
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [['autoprefixer']],
-              },
-            },
-          },
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
     ],
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-      chunkFilename: '[id].[contenthash].css',
-    }),
-  ],
-  devtool: 'source-map',
+
   optimization: {
     minimize: true,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
           compress: {
-            drop_console: true, // console.log 제거
-            pure_funcs: ['console.info', 'console.debug', 'console.warn'],
+            drop_console: true,
+            drop_debugger: true,
+            passes: 3,
           },
           format: {
-            comments: false, // 주석 제거
+            comments: false,
           },
+          mangle: true,
         },
         extractComments: false,
       }),
@@ -59,25 +49,49 @@ module.exports = merge(common, {
     splitChunks: {
       chunks: 'all',
       cacheGroups: {
-        // React 관련 vendor 분리
         react: {
-          test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
           name: 'react-vendors',
-          priority: 40,
+          priority: 15,
         },
-        // 기타 vendor
+        query: {
+          test: /[\\/]node_modules[\\/](@tanstack[\\/]react-query)[\\/]/,
+          name: 'query-vendors',
+          priority: 14,
+        },
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          priority: 30,
+          priority: 10,
         },
       },
     },
-    runtimeChunk: 'single', // 런타임 분리 → 캐시 효율 상승
+    runtimeChunk: { name: 'runtime' },
   },
+
+  plugins: [
+    new DotenvPlugin({
+      path: '.env.production',
+      systemvars: true,
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].[contenthash:8].css',
+      chunkFilename: 'css/[name].[contenthash:8].chunk.css',
+    }),
+    ...(useAnalyzer
+      ? [
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'bundle-report.html',
+            openAnalyzer: false,
+          }),
+        ]
+      : []),
+  ],
+
   performance: {
     hints: 'warning',
-    maxEntrypointSize: 300000, // 300KB
-    maxAssetSize: 200000, // 200KB
+    maxEntrypointSize: 300000,
+    maxAssetSize: 200000,
   },
 });

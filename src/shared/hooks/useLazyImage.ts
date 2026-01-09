@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, RefObject } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 const PLACEHOLDER_SVG = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3C/svg%3E';
 const INTERSECTION_ROOT_MARGIN = '200px';
@@ -43,14 +43,6 @@ export const useLazyImage: UseLazyImageHook = ({ src, rootMargin = INTERSECTION_
       observer.disconnect();
     };
   }, [src, rootMargin]);
-
-  // 브라우저 캐시된 이미지 감지
-  useEffect(() => {
-    const img = imgRef.current;
-    if (img?.complete && img.naturalHeight !== 0) {
-      setIsLoaded(true);
-    }
-  }, [imageSrc]);
 
   type HandleImageLoadFn = () => void;
   const handleImageLoad: HandleImageLoadFn = () => {

@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useRef } from 'react';
+import React, { ReactNode, useRef } from 'react';
 
 type CarouselContainerProps = {
   children: ReactNode;
@@ -7,16 +7,11 @@ type CarouselContainerProps = {
 
 /**
  * CarouselContainer - 캐러셀 레이아웃 컨테이너
- * 메모이제이션으로 불필요한 리렌더링 방지
  */
 export const CarouselContainer = ({ children, containerClassName }: CarouselContainerProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // className 메모이제이션
-  const containerClasses = useMemo(
-    () => `relative overflow-hidden h-fit ${containerClassName || ''}`,
-    [containerClassName],
-  );
+  const containerClasses = `relative overflow-hidden h-fit ${containerClassName || ''}`;
 
   return (
     <div className="space-y-6">

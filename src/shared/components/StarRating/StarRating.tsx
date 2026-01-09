@@ -1,18 +1,8 @@
-import React, { useMemo } from 'react';
-
-type StarRatingProps = {
-  rating: number; // 0 ~ 10 점수
-  maxStars?: number; // 최대 별 개수 (기본값: 5)
-  size?: number; // 별 크기 (기본값: 24)
-  showScore?: boolean; // 점수 텍스트 표시 여부 (기본값: false)
-  className?: string;
-};
+import { GetStarFillPercentageFn, StarProps, StarRatingProps } from './StarRating.types';
 
 const STAR_PATH = 'M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z';
 const FILLED_COLOR = '#fbbf24';
 const EMPTY_COLOR = '#d1d5db';
-
-type GetStarFillPercentageFn = (normalizedRating: number, starIndex: number) => number;
 
 const getStarFillPercentage: GetStarFillPercentageFn = (normalizedRating, starIndex) => {
   const starPosition = starIndex + 1;
@@ -20,12 +10,6 @@ const getStarFillPercentage: GetStarFillPercentageFn = (normalizedRating, starIn
   if (normalizedRating >= starPosition) return 100;
   if (normalizedRating > starIndex) return (normalizedRating - starIndex) * 100;
   return 0;
-};
-
-type StarProps = {
-  fillPercentage: number;
-  index: number;
-  size: number;
 };
 
 const Star = ({ fillPercentage, index, size }: StarProps) => (
@@ -43,16 +27,12 @@ const Star = ({ fillPercentage, index, size }: StarProps) => (
 );
 
 export const StarRating = ({ rating, maxStars = 5, size = 24, showScore = false, className = '' }: StarRatingProps) => {
-  const normalizedRating = useMemo(() => (rating / 10) * maxStars, [rating, maxStars]);
+  const normalizedRating = (rating / 10) * maxStars;
 
-  const stars = useMemo(
-    () =>
-      Array.from({ length: maxStars }, (_, index) => ({
-        id: index,
-        fillPercentage: getStarFillPercentage(normalizedRating, index),
-      })),
-    [maxStars, normalizedRating],
-  );
+  const stars = Array.from({ length: maxStars }, (_, index) => ({
+    id: index,
+    fillPercentage: getStarFillPercentage(normalizedRating, index),
+  }));
 
   return (
     <div className={`inline-flex items-center gap-2 ${className}`}>

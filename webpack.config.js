@@ -3,10 +3,10 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import DotenvPlugin from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import { fileURLToPath } from 'url';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -26,7 +26,7 @@ export default {
   devServer: {
     port: 3000,
     hot: true,
-    historyApiFallback: false,
+    historyApiFallback: true,
     compress: true,
     headers: {
       'X-Content-Type-Options': 'nosniff',
@@ -53,7 +53,6 @@ export default {
           compress: {
             drop_console: !isDevelopment,
             drop_debugger: !isDevelopment,
-            pure_funcs: isDevelopment ? [] : ['console.log', 'console.debug', 'console.warn'],
             unused: true,
             passes: !isDevelopment ? 3 : 1,
           },

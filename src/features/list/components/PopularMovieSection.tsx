@@ -1,9 +1,8 @@
-import React, { Suspense } from 'react';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
-import { CarouselSkeleton } from '@/shared/ui/CarouselSkeleton';
+import { MovieGridSkeleton } from '@/shared/ui/MovieGridSkeleton';
+import { Suspense } from 'react';
 import { MOVIE_TYPE_LABELS, MovieType } from '../constants/movieTypes';
 import { PopularMovieSectionContent } from './PopularMovieSectionContent';
-import { MovieGridSkeleton } from '@/shared/ui/MovieGridSkeleton';
 
 type PopularMovieSectionProps = {
   type: MovieType;

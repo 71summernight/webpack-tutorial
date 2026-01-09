@@ -1,47 +1,52 @@
-// webpack.dev.js
-const { merge } = require('webpack-merge');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const path = require('path');
-const common = require('./webpack.common');
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import DotenvPlugin from 'dotenv-webpack';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { merge } from 'webpack-merge';
+import common from './webpack.common.js';
 
-/** @type {import('webpack').Configuration} */
-module.exports = merge(common, {
+const useAnalyzer = process.env.USE_ANALYZER === 'true';
+
+export default merge(common, {
   mode: 'development',
-  output: {
-    filename: '[name].js',
-    chunkFilename: '[name].chunk.js',
+
+  devtool: 'cheap-module-source-map',
+
+  devServer: {
+    port: 3000,
+    hot: true,
+    historyApiFallback: true,
+    compress: true,
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+    },
   },
+
   module: {
     rules: [
-      // CSS: 개발은 style-loader
+      // CSS - 개발용 (style-loader로 HMR 지원)
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      // Babel에 react-refresh 플러그인 추가 (loader 옵션 merge)
-      {
-        test: /\.[jt]sx?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: { plugins: [require.resolve('react-refresh/babel')] },
-        },
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
   },
-  plugins: [new ReactRefreshWebpackPlugin()],
-  devtool: 'cheap-module-source-map',
-  devServer: {
-    static: { directory: path.join(__dirname, 'public') },
-    port: 3000,
-    open: true,
-    hot: true,
-    historyApiFallback: false,
-    compress: true,
-    // host: '0.0.0.0', allowedHosts: 'all', // 필요 시 외부 접근 허용
-  },
-  optimization: {
-    splitChunks: { chunks: 'all' },
-    // runtimeChunk: 'single' // 개발에선 없어도 무방
-  },
+
+  plugins: [
+    new ReactRefreshWebpackPlugin(),
+    new DotenvPlugin({
+      path: '.env.development',
+      systemvars: true,
+    }),
+    ...(useAnalyzer
+      ? [
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'bundle-report.html',
+            openAnalyzer: false,
+          }),
+        ]
+      : []),
+  ],
 });

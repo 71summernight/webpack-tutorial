@@ -1,18 +1,16 @@
-import React, { type CSSProperties } from 'react';
+import React, { type ComponentPropsWithoutRef } from 'react';
 import { useLazyImage } from '../hooks/useLazyImage';
 
-type LazyImageProps = {
+type LazyImageOwnProps = {
   src: string;
   alt: string;
-  width?: number | string;
-  height?: number | string;
-  className?: string;
-  onClick?: () => void;
-  style?: CSSProperties;
-  fetchPriority?: 'high' | 'low' | 'auto';
 };
 
-export const LazyImage = ({
+type LazyImageProps = LazyImageOwnProps &
+  Omit<ComponentPropsWithoutRef<'img'>, keyof LazyImageOwnProps | 'loading' | 'decoding' | 'ref'>;
+
+type LazyImageComponent = React.FC<LazyImageProps>;
+export const LazyImage: LazyImageComponent = ({
   src,
   alt,
   width,
@@ -21,7 +19,8 @@ export const LazyImage = ({
   onClick,
   style = {},
   fetchPriority = 'high',
-}: LazyImageProps) => {
+  ...rest
+}) => {
   const { imgRef, imageSrc, isLoaded, handleImageLoad } = useLazyImage({ src });
 
   // width와 height가 숫자일 때만 aspectRatio 계산
@@ -56,6 +55,7 @@ export const LazyImage = ({
           cursor: onClick ? 'pointer' : 'inherit',
           ...style,
         }}
+        {...rest}
       />
     </div>
   );

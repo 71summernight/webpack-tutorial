@@ -1,28 +1,15 @@
-import SearchItem from './components/SearchItem';
-import useHandleKeyword from './hooks/useHandleKeyword';
-import { useMovieSearch } from './hooks/useMovieSearch';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import Loading from '@/shared/ui/Loading';
+import { Suspense } from 'react';
+import SearchPageContent from './components/SearchPageContent';
 
 const SearchPage = () => {
-  const { queryFromUrl } = useHandleKeyword();
-  const { data: searchResults } = useMovieSearch(queryFromUrl ? { query: queryFromUrl } : undefined);
-
-  if (searchResults?.results.length === 0) {
-    return (
-      <div className="px-10">
-        <h1>검색 결과가 없습니다.</h1>
-      </div>
-    );
-  }
-
   return (
-    <div className="px-10">
-      <h1>Search Results</h1>
-      <ul className="space-y-2">
-        {searchResults.results.map((result) => (
-          <SearchItem key={result.id} result={result} />
-        ))}
-      </ul>
-    </div>
+    <ErrorBoundary>
+      <Suspense fallback={<Loading />}>
+        <SearchPageContent />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

@@ -29,3 +29,5 @@ dist-ssr
 # Environment variables
 # Keep .env.example for sharing configuration structure
 !.env.example
+*storybook.log
+storybook-static

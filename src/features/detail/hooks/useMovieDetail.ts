@@ -1,6 +1,6 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { movieApi } from '@/entities/movie/api';
 import { MovieDetail } from '@/entities/movie/types';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 type UseMovieDetailHook = (movieId: number | undefined) => ReturnType<typeof useSuspenseQuery<MovieDetail>>;
 export const useMovieDetail: UseMovieDetailHook = (movieId) => {

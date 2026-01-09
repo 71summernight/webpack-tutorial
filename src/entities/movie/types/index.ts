@@ -53,3 +53,28 @@ export type MovieDetail = Movie & {
 export type MovieGenreListResponse = {
   genres: Genre[];
 };
+
+export type AuthorDetails = {
+  name: string;
+  username: string;
+  avatar_path: string | null;
+  rating: number | null;
+};
+
+export type MovieReview = {
+  author: string;
+  author_details: AuthorDetails;
+  content: string;
+  created_at: string;
+  id: string;
+  updated_at: string;
+  url: string;
+};
+
+export type MovieReviewListResponse = {
+  id: number;
+  page: number;
+  results: MovieReview[];
+  total_pages: number;
+  total_results: number;
+};

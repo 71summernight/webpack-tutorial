@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react';
+import React, { ReactNode } from 'react';
 import { useCarouselContextState } from './CarouselStateContext';
 
 type CarouselProps = {
@@ -30,36 +30,25 @@ export const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const { currentIndex, isTransitioning } = useCarouselContextState();
 
-  // children을 배열로 정규화 (메모이제이션)
-  const childrenArray = useMemo(() => (Array.isArray(children) ? children : [children]), [children]);
+  // children을 배열로 정규화 (React.Children.toArray로 안정적인 key 보장)
+  const childrenArray = React.Children.toArray(children);
 
-  // 현재 페이지의 시작 인덱스와 보이는 아이템 계산 (통합)
-  const visibleItems = useMemo(() => {
-    const startIndex = currentIndex * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, childrenArray.length);
-    return childrenArray.slice(startIndex, endIndex);
-  }, [currentIndex, itemsPerPage, childrenArray]);
+  // 현재 페이지의 시작 인덱스와 보이는 아이템 계산
+  const startIndex = currentIndex * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, childrenArray.length);
+  const visibleItems = childrenArray.slice(startIndex, endIndex);
 
-  const gridContainerClassName = useMemo(
-    () => `relative overflow-hidden w-full ${containerClassName}`,
-    [containerClassName],
-  );
+  const gridContainerClassName = `relative overflow-hidden w-full ${containerClassName}`;
 
-  const itemStyle = useMemo(
-    () => ({
-      width: '100%',
-      transition: isTransitioning ? `opacity ${transitionDuration}ms ease-in-out` : 'none',
-    }),
-    [isTransitioning, transitionDuration],
-  );
+  const itemStyle = {
+    width: '100%',
+    transition: isTransitioning ? `opacity ${transitionDuration}ms ease-in-out` : 'none',
+  };
 
-  const containerStyle = useMemo(
-    () => ({
-      opacity: isTransitioning ? 0.95 : 1,
-      transition: isTransitioning ? `opacity ${transitionDuration}ms ease-in-out` : 'none',
-    }),
-    [isTransitioning, transitionDuration],
-  );
+  const containerStyle = {
+    opacity: isTransitioning ? 0.95 : 1,
+    transition: isTransitioning ? `opacity ${transitionDuration}ms ease-in-out` : 'none',
+  };
 
   return (
     <div
@@ -71,9 +60,9 @@ export const Carousel: React.FC<CarouselProps> = ({
       }}
       className={gridContainerClassName}
     >
-      {visibleItems.map((item, index) => (
-        <div key={`visible-item-${index}`} style={itemStyle} className={itemClassName || ''}>
-          {item}
+      {visibleItems.map((child) => (
+        <div key={(child as React.ReactElement).key} style={itemStyle} className={itemClassName || ''}>
+          {child}
         </div>
       ))}
 

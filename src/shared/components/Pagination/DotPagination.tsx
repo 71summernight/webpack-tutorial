@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useCarouselContextState } from '../Carousel/CarouselStateContext';
 
 type DotPaginationProps = {
@@ -11,7 +11,7 @@ type DotPaginationProps = {
  */
 export const DotPagination = ({ pageCount }: DotPaginationProps) => {
   const { currentIndex, isTransitioning, moveTo } = useCarouselContextState();
-  const pageArray = useMemo(() => Array.from({ length: pageCount }, (_, i) => i), [pageCount]);
+  const pageArray = Array.from({ length: pageCount }, (_, i) => i);
 
   return (
     <div className="flex justify-center gap-1.5 mt-8">

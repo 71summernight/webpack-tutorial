@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useMemo } from 'react';
+import React, { createContext, ReactNode, useContext } from 'react';
 
 export type CarouselContextValue = {
   currentIndex: number;
@@ -17,16 +17,10 @@ type CarouselStateProviderProps = {
 
 /**
  * CarouselStateProvider - Context 제공자
- * 메모이제이션으로 성능 최적화
+ * 메모이제이션은 useCarouselState 훅에서 처리
  */
 export const CarouselStateProvider: React.FC<CarouselStateProviderProps> = ({ children, value }) => {
-  // value를 메모이제이션하여 참조 동일성 보장
-  const memoizedValue = useMemo(
-    () => value,
-    [value.currentIndex, value.isTransitioning, value.moveNext, value.movePrev, value.moveTo],
-  );
-
-  return <CarouselStateContext.Provider value={memoizedValue}>{children}</CarouselStateContext.Provider>;
+  return <CarouselStateContext.Provider value={value}>{children}</CarouselStateContext.Provider>;
 };
 
 /**

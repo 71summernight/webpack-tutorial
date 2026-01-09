@@ -4,7 +4,7 @@
     ["@babel/preset-react", { "runtime": "automatic" }],
     "@babel/preset-typescript"
   ],
-  "plugins": [],
+  "plugins": ["babel-plugin-react-compiler"],
   "env": {
     "development": {
       "plugins": ["react-refresh/babel"]

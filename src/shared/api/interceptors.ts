@@ -25,7 +25,7 @@ const setupAuthInterceptor: SetupAuthInterceptorFn = () => {
  */
 type SetupLoggingInterceptorFn = () => void;
 const setupLoggingInterceptor: SetupLoggingInterceptorFn = () => {
-  const isDev = process.env.NODE_ENV === 'development';
+  const isDev = import.meta.env.DEV;
 
   // 글로벌 요청 메타데이터 저장소
   const requestMetadata = new Map<string, { startTime: number; url: string; method: string; body?: any }>();

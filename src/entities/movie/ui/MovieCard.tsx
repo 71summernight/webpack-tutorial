@@ -1,4 +1,4 @@
-import { LazyImage } from '@/shared/components/LazyImage';
+import { LazyImage } from '@movie-app/ui';
 import { Link } from 'react-router-dom';
 import { PopularBadge } from './PopularBadge';
 

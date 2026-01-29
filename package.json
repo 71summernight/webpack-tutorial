@@ -30,6 +30,7 @@
     ]
   },
   "dependencies": {
+    "@movie-app/ui": "workspace:*",
     "@tanstack/react-query": "^5.90.5",
     "axios": "^1.13.1",
     "clsx": "^2.1.1",

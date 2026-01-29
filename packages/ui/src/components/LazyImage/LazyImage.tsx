@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import React, { type ComponentPropsWithoutRef } from 'react';
-import { useLazyImage } from '../hooks/useLazyImage';
+import { useLazyImage } from '../../hooks/useLazyImage/useLazyImage';
 
 type LazyImageOwnProps = {
   src: string;

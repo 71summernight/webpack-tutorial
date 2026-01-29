@@ -1,7 +1,7 @@
 import { useMovieGenres } from '@/entities/movie/hooks/useMovieGenres';
 import { getGenreName, getPosterUrl } from '@/entities/movie/utils';
-import { LazyImage } from '@/shared/components/LazyImage';
 import { StarRating } from '@/shared/components/StarRating/StarRating';
+import { LazyImage } from '@movie-app/ui';
 import clsx from 'clsx';
 import { useParams } from 'react-router-dom';
 import { useMovieDetail } from '../hooks/useMovieDetail';

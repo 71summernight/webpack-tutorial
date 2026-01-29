@@ -1,6 +1,4 @@
-import React from 'react';
-import { useCarouselContextState } from '../Carousel/CarouselStateContext';
-
+import { useCarouselContextState } from '@movie-app/ui';
 type DotPaginationProps = {
   pageCount: number;
 };

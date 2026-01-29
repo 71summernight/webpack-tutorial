@@ -1,8 +1,6 @@
 import { PAGES } from '@/app/routes/paths';
-import { Carousel, CarouselContainer } from '@/shared/components/Carousel';
-import { CarouselStateProvider } from '@/shared/components/Carousel/CarouselStateContext';
 import { DotPagination } from '@/shared/components/Pagination';
-import { useCarouselState } from '@/shared/hooks/useCarouselState';
+import { Carousel, CarouselContainer, CarouselStateProvider, useCarouselState } from '@movie-app/ui';
 import { Movie } from '../types';
 import { getPosterUrl } from '../utils';
 import { MovieCard } from './MovieCard';

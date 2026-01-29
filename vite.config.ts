@@ -31,6 +31,7 @@ export default defineConfig({
         manualChunks: {
           'react-vendors': ['react', 'react-dom', 'react-router-dom'],
           'query-vendors': ['@tanstack/react-query'],
+          'ui-package': ['@movie-app/ui'], // 추가
           vendors: ['axios', 'zustand', 'clsx', 'tailwind-merge'],
         },
         chunkFileNames: 'js/[name]-[hash].js',
